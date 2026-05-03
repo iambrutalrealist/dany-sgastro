@@ -930,6 +930,21 @@
   })();
 })();
 </script>
+  <script src="https://jsdelivr.net"></script>
+<script>
+  const SUPABASE_URL = 'https://anzzaohvvneraeqqhofb.supabase.co'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFuenphb2h2dm5lcmFlcXFob2ZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3OTYxODUsImV4cCI6MjA5MzM3MjE4NX0.aA823mK45pd6vV32HiZvEqLx4kxP_9Om7hyf3Y7jYoI'
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+  async function submitOrderToKitchen(name, food, extras) {
+    const { error } = await _supabase
+      .from('orders')
+      .insert([{ customer_name: name, items: food, toppings: extras }])
+
+    if (error) console.error('Error:', error)
+    else alert('Narudžbina je poslata u kuhinju!')
+  }
+</script>
 
 </body>
 </html>
