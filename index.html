@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dany's Gastro — Moderni Balkanski Koncept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:     #F2EDE6;
+    --dark:   #1A1A1A;
+    --mid:    #3D3430;
+    --gold:   #C9943A;
+    --rust:   #A63D20;
+    --muted:  #7A6F65;
+    --border: rgba(26,26,26,0.12);
+    --cream2: #EDE7DD;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── SECTION TAG ── */
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .section-tag::before,
+  .section-tag::after {
+    content: '';
+    width: 28px; height: 1px;
+    background: currentColor;
+    opacity: 0.5;
+  }
+
+  /* ══════════ NAV ══════════ */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5vw;
+    background: rgba(242,237,230,0.93);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--dark);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+  .nav-logo em { font-style: italic; color: var(--rust); font-weight: 400; }
+
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color .25s;
+  }
+  .nav-links a:hover { color: var(--dark); }
+  .nav-cta {
+    background: var(--dark);
+    color: #F2EDE6 !important;
+    padding: 10px 22px !important;
+    letter-spacing: 1.5px !important;
+    transition: background .25s !important;
+  }
+  .nav-cta:hover { background: var(--rust) !important; }
+
+  @media (max-width: 700px) {
+    .nav-links li:not(:last-child) { display: none; }
+    .nav-logo { font-size: 17px; }
+  }
+
+  /* ══════════ HERO VIDEO ══════════ */
+  .hero {
+    position: relative;
+    height: 100svh;
+    min-height: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  /* Blurred static background — shows instantly, even before video loads */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(6px) brightness(0.65) saturate(0.8);
+    transform: scale(1.07); /* hide blur edges */
+  }
+
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(20,14,8,.50) 0%,
+      rgba(20,14,8,.60) 50%,
+      rgba(20,14,8,.76) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 24px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(242,237,230,.55);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  .hero-tag::before, .hero-tag::after {
+    content: '';
+    width: 28px; height: 1px;
+    background: rgba(201,148,58,.55);
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(52px, 11vw, 130px);
+    line-height: .95;
+    color: #F2EDE6;
+    letter-spacing: -2px;
+    margin-bottom: 16px;
+  }
+  .hero-title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: clamp(14px, 2vw, 18px);
+    color: rgba(242,237,230,.6);
+    line-height: 1.8;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--rust);
+    color: #F2EDE6;
+    padding: 16px 44px;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    transition: background .25s, transform .2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: #8a3018; transform: translateY(-2px); }
+
+  .btn-ghost {
+    border: 1px solid rgba(242,237,230,.4);
+    color: rgba(242,237,230,.8);
+    padding: 16px 44px;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: border-color .25s, color .25s;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: rgba(242,237,230,.8); color: #F2EDE6; }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 32px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column;
+    align-items: center; gap: 6px;
+    color: rgba(242,237,230,.35);
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    animation: bounce 2.5s ease infinite;
+  }
+  .hero-scroll svg { width: 18px; }
+  @keyframes bounce {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(7px); }
+  }
+
+  /* ══════════ MARQUEE ══════════ */
+  .marquee {
+    background: var(--dark);
+    padding: 18px 0;
+    overflow: hidden;
+    border-top: 1px solid rgba(201,148,58,.2);
+    border-bottom: 1px solid rgba(201,148,58,.2);
+  }
+  .marquee-track {
+    display: flex;
+    animation: scroll-left 24s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-track span {
+    display: inline-flex;
+    align-items: center;
+    gap: 32px;
+    padding: 0 32px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 19px;
+    color: rgba(242,237,230,.8);
+  }
+  .marquee-track span::after {
+    content: '✦';
+    font-style: normal;
+    font-size: 9px;
+    color: var(--gold);
+  }
+  @keyframes scroll-left {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ══════════ GENERIC SECTION ══════════ */
+  .section {
+    padding: clamp(72px, 10vw, 140px) clamp(20px, 6vw, 80px);
+    text-align: center;
+  }
+
+  /* ══════════ ABOUT ══════════ */
+  .about-wrap { max-width: 680px; margin: 0 auto; }
+
+  .about-wrap h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5.5vw, 68px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--dark);
+    margin-bottom: 28px;
+  }
+  .about-wrap h2 em { font-style: italic; color: var(--rust); font-weight: 400; }
+
+  .about-quote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(17px, 2.2vw, 23px);
+    color: var(--mid);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 0;
+    margin: 32px 0;
+    line-height: 1.7;
+  }
+
+  .about-wrap p {
+    font-size: clamp(13px, 1.5vw, 15px);
+    line-height: 2;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  /* ══════════ PHOTO STRIP ══════════ */
+  .photo-strip-wrap {
+    background: var(--cream2);
+    padding: 0;
+  }
+  .photo-strip {
+    display: flex;
+    gap: 4px;
+    height: clamp(200px, 38vw, 500px);
+  }
+  .photo-strip .pi { flex: 1; overflow: hidden; }
+  .photo-strip .pi.big { flex: 1.9; }
+  .photo-strip img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(.75) contrast(1.05);
+    transition: filter .5s, transform .6s;
+    display: block;
+  }
+  .photo-strip .pi:hover img { filter: saturate(1); transform: scale(1.04); }
+
+  @media (max-width: 600px) {
+    .photo-strip { flex-direction: column; height: auto; gap: 3px; }
+    .photo-strip .pi { height: 240px; }
+    .photo-strip .pi.big { flex: unset; height: 280px; }
+  }
+
+  /* ══════════ MENU ══════════ */
+  .menu-section {
+    background: var(--dark);
+    padding: clamp(72px, 10vw, 140px) clamp(20px, 5vw, 64px);
+    text-align: center;
+  }
+
+  .menu-section .section-tag { color: rgba(242,237,230,.35); }
+  .menu-section .section-tag::before,
+  .menu-section .section-tag::after { background: rgba(201,148,58,.35); }
+
+  .menu-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 5.5vw, 76px);
+    font-weight: 700;
+    color: #F2EDE6;
+    line-height: 1.05;
+    margin-bottom: 14px;
+  }
+  .menu-section h2 em { font-style: italic; color: var(--gold); font-weight: 400; }
+
+  .menu-intro {
+    font-size: 13px;
+    color: rgba(242,237,230,.35);
+    letter-spacing: .5px;
+    margin-bottom: 60px;
+  }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 2px;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .menu-cat-block {
+    background: rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.06);
+    padding: 32px 26px;
+  }
+
+  .menu-cat-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    border-bottom: 1px solid rgba(201,148,58,.2);
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+  }
+  .menu-cat-title + .menu-cat-title,
+  .menu-cat-title.second { margin-top: 24px; }
+
+  .menu-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    gap: 12px;
+  }
+  .menu-item-row:last-child { border-bottom: none; }
+
+  .menu-item-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: #F2EDE6;
+    margin-bottom: 3px;
+  }
+  .menu-item-desc { font-size: 11px; color: rgba(242,237,230,.32); line-height: 1.6; }
+  .menu-item-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--gold);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ══════════ PHOTO ROW (restaurant1 + unsplash) ══════════ */
+  .photo-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: clamp(240px, 42vw, 580px);
+  }
+  .photo-row .pr { overflow: hidden; position: relative; }
+  .photo-row img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(.78);
+    transition: filter .5s, transform .6s;
+    display: block;
+  }
+  .photo-row .pr:hover img { filter: saturate(1.02); transform: scale(1.03); }
+  .pr-cap {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(20,14,8,.75) 0%, transparent 100%);
+    padding: 56px 28px 24px;
+    opacity: 0;
+    transition: opacity .4s;
+  }
+  .pr:hover .pr-cap { opacity: 1; }
+  .pr-cap span {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: #F2EDE6;
+  }
+
+  @media (max-width: 580px) {
+    .photo-row { grid-template-columns: 1fr; height: auto; }
+    .photo-row .pr { height: 260px; }
+  }
+
+  /* ══════════ VIBE / STATS ══════════ */
+  .vibe-section { background: var(--cream2); }
+
+  .vibe-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 62px);
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.12;
+    margin-bottom: 20px;
+    max-width: 580px;
+    margin-left: auto; margin-right: auto;
+  }
+  .vibe-section h2 em { font-style: italic; color: var(--rust); font-weight: 400; }
+
+  .vibe-section p {
+    font-size: clamp(13px, 1.5vw, 15px);
+    color: var(--muted);
+    line-height: 2;
+    max-width: 520px;
+    margin: 0 auto 56px;
+  }
+
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: clamp(28px, 6vw, 80px);
+    flex-wrap: wrap;
+  }
+  .stat-box { text-align: center; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 700;
+    color: var(--rust);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ══════════ CONTACT ══════════ */
+  .contact-section { background: var(--mid); color: #F2EDE6; }
+  .contact-section .section-tag { color: rgba(242,237,230,.3); }
+  .contact-section .section-tag::before,
+  .contact-section .section-tag::after { background: rgba(201,148,58,.3); }
+
+  .contact-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5.5vw, 72px);
+    font-weight: 700;
+    color: #F2EDE6;
+    line-height: 1.08;
+    margin-bottom: 16px;
+  }
+  .contact-section h2 em { font-style: italic; color: var(--gold); font-weight: 400; }
+
+  .contact-section > p {
+    font-size: 14px;
+    color: rgba(242,237,230,.45);
+    line-height: 1.9;
+    margin-bottom: 44px;
+    max-width: 480px;
+    margin-left: auto; margin-right: auto;
+  }
+
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 48px;
+  }
+  .contact-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 14px;
+    color: rgba(242,237,230,.55);
+  }
+  .contact-icon {
+    width: 38px; height: 38px;
+    border: 1px solid rgba(201,148,58,.22);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .contact-row a {
+    color: var(--gold);
+    text-decoration: none;
+    transition: color .25s;
+  }
+  .contact-row a:hover { color: #F2EDE6; }
+
+  .btn-order-gold {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--dark);
+    padding: 20px 60px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .25s, transform .2s;
+  }
+  .btn-order-gold:hover { background: #e0a83d; transform: translateY(-2px); }
+
+  /* ══════════ FOOTER ══════════ */
+  footer {
+    background: var(--dark);
+    padding: clamp(32px,5vw,52px) clamp(20px,5vw,60px);
+    text-align: center;
+    border-top: 1px solid rgba(201,148,58,.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #F2EDE6;
+  }
+  .footer-logo em { font-style: italic; color: var(--gold); font-weight: 400; }
+
+  .footer-links {
+    display: flex; gap: 24px; flex-wrap: wrap; justify-content: center;
+    list-style: none;
+  }
+  .footer-links a {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(242,237,230,.3);
+    text-decoration: none;
+    transition: color .25s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+
+  .footer-copy { font-size: 11px; color: rgba(242,237,230,.18); letter-spacing: .5px; }
+
+  /* ══════════ SCROLL WIDGET ══════════ */
+  #db-widget {
+    position: fixed;
+    bottom: 26px; right: 26px;
+    width: 68px; height: 68px;
+    z-index: 9999;
+    cursor: pointer;
+    background: rgba(20,14,8,.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 50%;
+    border: 1px solid rgba(201,148,58,.38);
+    box-shadow: 0 8px 28px rgba(0,0,0,.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2px;
+    text-decoration: none;
+    transition: transform .2s, box-shadow .2s, border-color .3s;
+    overflow: visible;
+  }
+  #db-widget:hover {
+    transform: scale(1.09);
+    border-color: rgba(201,148,58,.75);
+    box-shadow: 0 14px 36px rgba(0,0,0,.55);
+  }
+  #db-widget:active { transform: scale(.95); }
+
+  #db-rotor { width: 40px; height: 40px; will-change: transform; }
+
+  #db-label {
+    font-size: 6px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(201,148,58,.6);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+  }
+
+  #db-ring {
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background:
+      linear-gradient(#140E08, #140E08) padding-box,
+      conic-gradient(from var(--ring-angle,0deg), #C9943A 0%, #A63D20 50%, #C9943A 100%) border-box;
+    opacity: 0;
+    transition: opacity .3s;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- ════ NAV ════ -->
+<nav>
+  <a href="#" class="nav-logo">Dany's <em>Gastro</em></a>
+  <ul class="nav-links">
+    <li><a href="#o-nama">O Nama</a></li>
+    <li><a href="#meni">Meni</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+    <li><a href="order.html" class="nav-cta">Naruči →</a></li>
+  </ul>
+</nav>
+
+<!-- ════ HERO ════ -->
+<section class="hero">
+  <!-- Blurred background image -->
+  <div class="hero-bg"></div>
+  <!-- Video plays on top when loaded, falls back to image -->
+  <video class="hero-video" autoplay muted loop playsinline preload="auto">
+    <source src="hero.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">Beograd · Moderni Balkanski Koncept</div>
+    <h1 class="hero-title">Dany's<br><em>Gastro</em></h1>
+    <p class="hero-sub">
+      Gde autentični Balkan susreće savremeni lifestyle.<br>
+      Svaki zalogaj — priča za pamćenje.
+    </p>
+    <div class="hero-buttons">
+      <a href="order.html" class="btn-primary">Naruči Online</a>
+      <a href="#meni" class="btn-ghost">Pogledaj Meni</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ════ MARQUEE ════ -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>Balkanska duša</span><span>Moderni ukus</span><span>Domaće srce</span>
+    <span>Svježi sastojci</span><span>Dany's Gastro</span><span>Gastronomski ritual</span>
+    <span>Kultura stola</span><span>Balkanska duša</span><span>Moderni ukus</span>
+    <span>Domaće srce</span><span>Svježi sastojci</span><span>Dany's Gastro</span>
+    <span>Gastronomski ritual</span><span>Kultura stola</span>
+  </div>
+</div>
+
+<!-- ════ ABOUT ════ -->
+<section class="section" id="o-nama">
+  <div class="about-wrap">
+    <div class="section-tag">Naša filozofija</div>
+    <h2>Balkan koji nisi<br><em>zapamtio.</em></h2>
+    <blockquote class="about-quote">
+      "Hrana nije samo gorivo — hrana je jezik.<br>I mi govorimo tečno."
+    </blockquote>
+    <p>Dany's Gastro nije restoran. To je stav. Ovde se ukrštaju uska čokanjska ulica i beogradski noćni život, kajmak i craft kokteli, stara majka i DJ set.</p>
+    <p>Uzeli smo sve što volimo na Balkanu — toplinu, direktnost, zajednički sto — i podigli to na nivo koji nisi očekivao. Svaki zalogaj je svjež. Svaki trenutak je zamišljen.</p>
+  </div>
+</section>
+
+<!-- ════ PHOTO STRIP ════ -->
+<div class="photo-strip-wrap">
+  <div class="photo-strip">
+    <div class="pi big">
+      <img src="restaurant1.jpg" alt="Dany's Gastro enterijer" loading="lazy">
+    </div>
+    <div class="pi">
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80&auto=format&fit=crop" alt="Restoran" loading="lazy">
+    </div>
+    <div class="pi">
+      <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80&auto=format&fit=crop" alt="Atmosfera" loading="lazy">
+    </div>
+  </div>
+</div>
+
+<!-- ════ MENU ════ -->
+<section class="menu-section" id="meni">
+  <div class="section-tag">Naš meni</div>
+  <h2>Šta <em>kuvamo</em> danas.</h2>
+  <p class="menu-intro">Svježe pripremljeno svakog jutra — bez kompromisa.</p>
+
+  <div class="menu-grid">
+
+    <div class="menu-cat-block">
+      <div class="menu-cat-title">🍕 Pizze</div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pizza Capricciosa</div><div class="menu-item-desc">Paradajz sos, mocarela, šunka, pečurke, masline</div></div>
+        <div class="menu-item-price">850 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pizza Italiana</div><div class="menu-item-desc">Paradajz sos, mocarela, bosiljak, maslinovo ulje</div></div>
+        <div class="menu-item-price">790 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pizza Diavola</div><div class="menu-item-desc">Ljuti paradajz sos, pikantna salama, chilli</div></div>
+        <div class="menu-item-price">870 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pizza Margherita</div><div class="menu-item-desc">Klasični paradajz sos, svježa mocarela, bosiljak</div></div>
+        <div class="menu-item-price">720 rsd</div>
+      </div>
+    </div>
+
+    <div class="menu-cat-block">
+      <div class="menu-cat-title">🥗 Salate</div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Cezar Salata</div><div class="menu-item-desc">Romaine, grilovana piletina, krutoni, parmigiano</div></div>
+        <div class="menu-item-price">680 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Tuna Salata</div><div class="menu-item-desc">Premium tuna, masline, kapari, cherry paradajz</div></div>
+        <div class="menu-item-price">650 rsd</div>
+      </div>
+      <div class="menu-cat-title second" style="margin-top:24px">🍝 Tjestenine</div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pasta Carbonara</div><div class="menu-item-desc">Spaghetti, panceta, žumance, pecorino romano</div></div>
+        <div class="menu-item-price">750 rsd</div>
+      </div>
+    </div>
+
+    <div class="menu-cat-block">
+      <div class="menu-cat-title">🥪 Sendviči</div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Index Sendvič</div><div class="menu-item-desc">Pileći file, zelena salata, paradajz, majonez</div></div>
+        <div class="menu-item-price">520 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Brzi Sendvič</div><div class="menu-item-desc">Šunka, sir, karamelizovani luk, topli</div></div>
+        <div class="menu-item-price">430 rsd</div>
+      </div>
+      <div class="menu-cat-title second" style="margin-top:24px">🍮 Slatkiši</div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Tiramisu Kolač</div><div class="menu-item-desc">Mascarpone, espresso, kakao prah — klasik</div></div>
+        <div class="menu-item-price">380 rsd</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════ PHOTO ROW ════ -->
+<div class="photo-row">
+  <div class="pr">
+    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=85&auto=format&fit=crop" alt="Enterijer restorana" loading="lazy">
+    <div class="pr-cap"><span>Naš prostor</span></div>
+  </div>
+  <div class="pr">
+    <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=700&q=85&auto=format&fit=crop" alt="Gosti za stolom" loading="lazy">
+    <div class="pr-cap"><span>Naši gosti</span></div>
+  </div>
+</div>
+
+<!-- ════ VIBE / STATS ════ -->
+<section class="section vibe-section">
+  <div class="section-tag">Više od hrane</div>
+  <h2>Gde gosti postaju <em>porodica.</em></h2>
+  <p>Dany's Gastro je zamišljen kao produžetak vaše dnevne sobe. Razgovor teče, muzika šapuće, a hrana govori glasno. Dođi sam, dođi u društvu — svaki put je pravo.</p>
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">10+</div><div class="stat-label">Jela u meniju</div></div>
+    <div class="stat-box"><div class="stat-num">100%</div><div class="stat-label">Svježi sastojci</div></div>
+    <div class="stat-box"><div class="stat-num">7</div><div class="stat-label">Dana u sedmici</div></div>
+    <div class="stat-box"><div class="stat-num">∞</div><div class="stat-label">Razloga da dođeš</div></div>
+  </div>
+</section>
+
+<!-- ════ CONTACT ════ -->
+<section class="section contact-section" id="kontakt">
+  <div class="section-tag">Kontakt</div>
+  <h2>Nađimo se za <em>stolom.</em></h2>
+  <p>Rezerviši mjesto, naruči online ili nam jednostavno pošalji poruku — mi smo tu.</p>
+
+  <div class="contact-info">
+    <div class="contact-row">
+      <div class="contact-icon">📞</div>
+      <span><a href="tel:+381644185494">+381 64 418 5494</a></span>
+    </div>
+    <div class="contact-row">
+      <div class="contact-icon">🚚</div>
+      <span><a href="http://alideda.com" target="_blank">alideda.com</a> — dostava</span>
+    </div>
+    <div class="contact-row">
+      <div class="contact-icon">📍</div>
+      <span>Beograd, Srbija</span>
+    </div>
+  </div>
+
+  <a href="order.html" class="btn-order-gold">Naruči Online →</a>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer>
+  <div class="footer-logo">Dany's <em>Gastro</em></div>
+  <ul class="footer-links">
+    <li><a href="#meni">Meni</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+    <li><a href="order.html">Naruči</a></li>
+    <li><a href="http://alideda.com" target="_blank">Alideda dostava</a></li>
+  </ul>
+  <div class="footer-copy">© 2024 Dany's Gastro. Sva prava zadržana.</div>
+</footer>
+
+<!-- ════ SPINNING WIDGET — D·G logo ════ -->
+<a href="order.html" id="db-widget" title="Naruči online">
+  <div id="db-ring"></div>
+  <svg id="db-rotor" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="gld" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#E0B84A"/>
+        <stop offset="100%" stop-color="#A67C28"/>
+      </linearGradient>
+      <linearGradient id="rst" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#C05030"/>
+        <stop offset="100%" stop-color="#7A2810"/>
+      </linearGradient>
+      <filter id="sh">
+        <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="rgba(0,0,0,.5)"/>
+      </filter>
+    </defs>
+    <!-- Fork (left, rotated -30°) -->
+    <g transform="rotate(-30,21,21)" filter="url(#sh)">
+      <rect x="9.5" y="5" width="2" height="21" rx="1" fill="url(#gld)" opacity=".92"/>
+      <rect x="7"   y="5" width="1.2" height="8" rx=".6" fill="url(#gld)" opacity=".8"/>
+      <rect x="12"  y="5" width="1.2" height="8" rx=".6" fill="url(#gld)" opacity=".8"/>
+    </g>
+    <!-- Knife (right, rotated +30°) -->
+    <g transform="rotate(30,21,21)" filter="url(#sh)">
+      <rect x="29.5" y="5" width="2" height="21" rx="1" fill="url(#rst)" opacity=".88"/>
+      <path d="M29.5 5 Q33.5 9.5 31.5 14 L29.5 14 Z" fill="url(#rst)" opacity=".8"/>
+    </g>
+    <!-- Centre ring + letters -->
+    <circle cx="21" cy="21" r="6.8" fill="rgba(20,14,8,.7)" stroke="rgba(201,148,58,.55)" stroke-width=".8"/>
+    <text x="21" y="19" font-family="Georgia,serif" font-size="6" font-weight="bold"
+          fill="#E0B84A" text-anchor="middle" dominant-baseline="middle">D</text>
+    <text x="21" y="25" font-family="Georgia,serif" font-size="5.5" font-style="italic"
+          fill="rgba(242,237,230,.65)" text-anchor="middle" dominant-baseline="middle">G</text>
+  </svg>
+  <div id="db-label">Naruči</div>
+</a>
+
+<script>
+(function(){
+  const rotor = document.getElementById('db-rotor');
+  const ring  = document.getElementById('db-ring');
+  let rotation=0, lastY=window.scrollY, lastT=performance.now(),
+      velocity=0, ringAngle=0, idle=null;
+
+  window.addEventListener('scroll',()=>{
+    const now=performance.now(), dy=window.scrollY-lastY, dt=now-lastT||16;
+    velocity=(dy/dt)*1000; lastY=window.scrollY; lastT=now;
+    ring.style.opacity='1';
+    clearTimeout(idle);
+    idle=setTimeout(()=>{ring.style.opacity='0'; velocity=0;},600);
+  },{passive:true});
+
+  (function loop(){
+    const spd=Math.max(-28,Math.min(28,velocity*.02));
+    rotation+=spd; ringAngle+=Math.abs(spd)*2;
+    rotor.style.transform=`rotate(${rotation}deg)`;
+    ring.style.setProperty('--ring-angle',`${ringAngle}deg`);
+    velocity*=.91;
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
+
+</body>
+</html>

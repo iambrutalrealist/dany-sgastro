@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naruči — Dany's Gastro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:     #F2EDE6;
+    --dark:   #1A1A1A;
+    --mid:    #3D3430;
+    --gold:   #C9943A;
+    --rust:   #A63D20;
+    --muted:  #7A6F65;
+    --border: rgba(26,26,26,0.12);
+    --cream2: #EDE7DD;
+    --success:#2d8a4e;
+    --error:  #a63d20;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw;
+    background: rgba(242,237,230,0.95);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 19px;
+    color: var(--dark); text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+  .logo em { font-style: italic; color: var(--rust); font-weight: 400; }
+
+  .back-link {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: color .25s;
+  }
+  .back-link:hover { color: var(--dark); }
+
+  /* ── HERO STRIP ── */
+  .hero-strip {
+    background: var(--mid);
+    padding: clamp(56px,10vw,100px) 24px clamp(44px,7vw,72px);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-strip::before {
+    content: '';
+    position: absolute; top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 500px; height: 300px;
+    background: radial-gradient(ellipse, rgba(201,148,58,0.14) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: rgba(242,237,230,0.45);
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    margin-bottom: 20px;
+  }
+  .hero-tag::before, .hero-tag::after {
+    content: ''; width: 24px; height: 1px;
+    background: rgba(201,148,58,0.45);
+  }
+
+  .hero-strip h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(44px, 9vw, 96px);
+    font-weight: 700; line-height: .95;
+    color: #F2EDE6; letter-spacing: -1px;
+    margin-bottom: 14px;
+  }
+  .hero-strip h1 em { font-style: italic; color: var(--gold); font-weight: 400; }
+
+  .hero-strip p {
+    font-size: 13px; color: rgba(242,237,230,0.45);
+    letter-spacing: 0.5px;
+  }
+
+  /* ── FORM CONTAINER ── */
+  .form-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: clamp(48px,8vw,88px) clamp(20px,5vw,48px) clamp(64px,10vw,120px);
+  }
+
+  /* ── BLOCK ── */
+  .form-block { margin-bottom: 52px; }
+
+  .block-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px; letter-spacing: 5px;
+    color: var(--gold);
+    border-bottom: 1px solid rgba(201,148,58,0.2);
+    padding-bottom: 12px; margin-bottom: 28px;
+  }
+
+  /* ── FIELDS ── */
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px; margin-bottom: 20px;
+  }
+  .field-row.single { grid-template-columns: 1fr; }
+
+  .field-group { display: flex; flex-direction: column; gap: 7px; }
+
+  label {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  input, select {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(26,26,26,0.18);
+    padding: 13px 0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 400;
+    color: var(--dark);
+    outline: none;
+    transition: border-color .25s;
+    width: 100%;
+    -webkit-appearance: none; appearance: none;
+  }
+  input:focus, select:focus { border-color: var(--gold); }
+  input::placeholder { color: rgba(122,111,101,0.35); }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '↓';
+    position: absolute; right: 0; bottom: 13px;
+    font-size: 13px; color: var(--gold);
+    pointer-events: none;
+  }
+  .select-wrap select { cursor: pointer; padding-right: 24px; }
+
+  select option { background: #F2EDE6; color: var(--dark); }
+  optgroup {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600; font-size: 11px;
+    color: var(--rust);
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+
+  .field-hint {
+    font-size: 11px; color: var(--muted);
+    margin-top: 6px; letter-spacing: 0.3px;
+  }
+
+  /* ── TOTAL ── */
+  .total-box {
+    background: var(--dark);
+    padding: clamp(28px,5vw,44px) clamp(24px,5vw,48px);
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 32px;
+    position: relative; overflow: hidden;
+    flex-wrap: wrap; gap: 20px;
+  }
+  .total-box::before {
+    content: '';
+    position: absolute; top: -40px; right: -40px;
+    width: 150px; height: 150px;
+    background: radial-gradient(circle, rgba(201,148,58,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .total-label {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  .total-breakdown {
+    font-size: 12px; color: rgba(242,237,230,0.35);
+    line-height: 1.9; white-space: pre-line;
+  }
+  .total-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px,8vw,72px);
+    font-weight: 700; color: var(--gold); line-height: 1;
+  }
+  .total-currency {
+    font-size: 14px; color: var(--muted);
+    margin-top: 4px; font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+  }
+
+  /* ── SUBMIT ── */
+  .btn-submit {
+    width: 100%;
+    background: var(--rust);
+    color: #F2EDE6;
+    border: none;
+    padding: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    font-weight: 600; cursor: pointer;
+    transition: background .25s, transform .2s;
+    position: relative; overflow: hidden;
+  }
+  .btn-submit:hover:not(:disabled) { background: #8a3018; transform: translateY(-1px); }
+  .btn-submit:disabled { background: var(--muted); cursor: not-allowed; }
+
+  /* ── MESSAGE ── */
+  .form-msg {
+    display: none;
+    text-align: center;
+    padding: 18px 24px;
+    margin-top: 20px;
+    font-size: 13px; letter-spacing: 0.3px;
+    border: 1px solid transparent;
+  }
+  .form-msg.success {
+    display: block;
+    background: rgba(45,138,78,0.08);
+    border-color: rgba(45,138,78,0.25);
+    color: var(--success);
+  }
+  .form-msg.error {
+    display: block;
+    background: rgba(166,61,32,0.08);
+    border-color: rgba(166,61,32,0.25);
+    color: var(--error);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark);
+    padding: clamp(36px,5vw,52px) 24px;
+    text-align: center;
+    border-top: 1px solid rgba(201,148,58,0.1);
+    display: flex; flex-direction: column;
+    align-items: center; gap: 16px;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; color: #F2EDE6;
+  }
+  .footer-logo em { font-style: italic; color: var(--gold); font-weight: 400; }
+
+  .footer-info {
+    font-size: 12px; color: rgba(242,237,230,0.3);
+    letter-spacing: 0.5px; line-height: 2;
+  }
+  .footer-info a { color: var(--gold); text-decoration: none; transition: color .25s; }
+  .footer-info a:hover { color: #F2EDE6; }
+
+  /* ── ALIDEDA BUTTON ── */
+  .alideda-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 1px solid rgba(201,148,58,0.25);
+    color: rgba(242,237,230,0.4);
+    padding: 10px 24px;
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color .25s, color .25s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .alideda-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .alideda-btn span { font-size: 14px; }
+
+  @media (max-width: 560px) {
+    .field-row { grid-template-columns: 1fr; }
+    .total-box { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">Dany's <em>Gastro</em></a>
+  <a href="index.html" class="back-link">← Nazad na sajt</a>
+</header>
+
+<div class="hero-strip">
+  <div class="hero-tag">Online narudžbina</div>
+  <h1>Naruči<br><em>odmah.</em></h1>
+  <p>Popuni formu — primamo narudžbu u realnom vremenu.</p>
+</div>
+
+<div class="form-wrap">
+
+  <div class="form-block">
+    <div class="block-title">— Tvoji Podaci</div>
+    <div class="field-row">
+      <div class="field-group">
+        <label for="firstName">Ime *</label>
+        <input type="text" id="firstName" placeholder="Npr. Marko" required>
+      </div>
+      <div class="field-group">
+        <label for="lastName">Prezime *</label>
+        <input type="text" id="lastName" placeholder="Npr. Jovanović" required>
+      </div>
+    </div>
+    <div class="field-row single">
+      <div class="field-group">
+        <label for="phone">Broj telefona *</label>
+        <input type="tel" id="phone" placeholder="Npr. 064 123 4567" required>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-block">
+    <div class="block-title">— Tvoja Narudžba</div>
+
+    <div class="field-row single" style="margin-bottom:20px">
+      <div class="field-group">
+        <label for="meal">Odaberi jelo *</label>
+        <div class="select-wrap">
+          <select id="meal" required onchange="updateTopping(); calculateTotal();">
+            <option value="" disabled selected>— Izaberi jelo —</option>
+            <optgroup label="🍕  Pizze">
+              <option value="Pizza Capricciosa|850">Pizza Capricciosa — 850 RSD</option>
+              <option value="Pizza Italiana|790">Pizza Italiana — 790 RSD</option>
+              <option value="Pizza Diavola|870">Pizza Diavola — 870 RSD</option>
+              <option value="Pizza Margherita|720">Pizza Margherita — 720 RSD</option>
+            </optgroup>
+            <optgroup label="🥗  Salate">
+              <option value="Cezar Salata|680">Cezar Salata — 680 RSD</option>
+              <option value="Tuna Salata|650">Tuna Salata — 650 RSD</option>
+            </optgroup>
+            <optgroup label="🍝  Tjestenine">
+              <option value="Pasta Carbonara|750">Pasta Carbonara — 750 RSD</option>
+            </optgroup>
+            <optgroup label="🥪  Sendviči">
+              <option value="Index Sendvič|520">Index Sendvič — 520 RSD</option>
+              <option value="Brzi Sendvič|430">Brzi Sendvič — 430 RSD</option>
+            </optgroup>
+            <optgroup label="🍮  Slatkiši">
+              <option value="Tiramisu Kolač|380">Tiramisu Kolač — 380 RSD</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row single">
+      <div class="field-group">
+        <label for="topping">Dodatak (opcionalno)</label>
+        <div class="select-wrap">
+          <select id="topping" onchange="calculateTotal();">
+            <option value="|0">— Bez dodatka —</option>
+          </select>
+        </div>
+        <div class="field-hint" id="topping-hint"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOTAL -->
+  <div class="total-box">
+    <div>
+      <div class="total-label">Ukupno za plaćanje</div>
+      <div class="total-breakdown" id="totalBreakdown">Odaberi jelo da vidiš cenu</div>
+    </div>
+    <div style="text-align:right">
+      <div class="total-amount" id="totalAmount">0</div>
+      <div class="total-currency">RSD</div>
+    </div>
+  </div>
+
+  <button class="btn-submit" id="submitBtn" onclick="submitOrder()">
+    Pošalji Narudžbu →
+  </button>
+
+  <div class="form-msg" id="formMsg"></div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Dany's <em>Gastro</em></div>
+  <div class="footer-info">
+    <a href="tel:+381644185494">+381 64 418 5494</a>
+    &nbsp;·&nbsp; Beograd, Srbija
+  </div>
+  <a href="http://alideda.com" target="_blank" class="alideda-btn">
+    <span>🚚</span> Dostava putem Alideda
+  </a>
+</footer>
+
+<!-- ═══════════════════════════════════
+  FIREBASE SETUP:
+  1. console.firebase.google.com → novi projekat
+  2. Firestore Database → Create → Test mode
+  3. Project Settings → Web app → kopiraj firebaseConfig
+  4. Zalijepi ispod (isti config i u kitchen.html)
+═══════════════════════════════════ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // ⚠️ ZAMENI SA TVOJIM FIREBASE CONFIGOM
+  const firebaseConfig = {
+    apiKey:            "TVOJ_API_KEY",
+    authDomain:        "TVOJ_PROJECT.firebaseapp.com",
+    projectId:         "TVOJ_PROJECT_ID",
+    storageBucket:     "TVOJ_PROJECT.appspot.com",
+    messagingSenderId: "TVOJ_SENDER_ID",
+    appId:             "TVOJ_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  window._db              = db;
+  window._addDoc          = addDoc;
+  window._collection      = collection;
+  window._serverTimestamp = serverTimestamp;
+  window._firebaseReady   = true;
+</script>
+
+<script>
+// ── TOPPINGS BY CATEGORY ──────────────────────────────
+const TOPPINGS = {
+  pizza:    [
+    {name:'Kečap',price:60},{name:'Majonez',price:60},
+    {name:'Chilli sos',price:70},{name:'Kajmak',price:120},
+    {name:'Jaje na oko',price:100},{name:'Paradajz svježi',price:80}
+  ],
+  salad:    [
+    {name:'Kečap',price:60},{name:'Majonez',price:60},
+    {name:'Chilli sos',price:70},{name:'Jaje na oko',price:100},
+    {name:'Zelena salata +',price:80},{name:'Pirinač',price:90},
+    {name:'Paradajz svježi',price:80}
+  ],
+  pasta:    [
+    {name:'Kajmak',price:120},{name:'Jaje na oko',price:100},
+    {name:'Chilli sos',price:70},{name:'Luk karamelizovani',price:80},
+    {name:'Pirinač',price:90}
+  ],
+  sandwich: [
+    {name:'Kečap',price:60},{name:'Majonez',price:60},
+    {name:'Chilli sos',price:70},{name:'Kajmak',price:120},
+    {name:'Jaje na oko',price:100},{name:'Zelena salata +',price:80},
+    {name:'Paradajz svježi',price:80},{name:'Luk karamelizovani',price:80}
+  ],
+  sweets: []
+};
+
+function getCategory(name) {
+  if (!name) return null;
+  const n = name.toLowerCase();
+  if (n.includes('pizza'))    return 'pizza';
+  if (n.includes('salata'))   return 'salad';
+  if (n.includes('pasta')||n.includes('carbonara')) return 'pasta';
+  if (n.includes('sendvič')||n.includes('sendvic')) return 'sandwich';
+  return 'sweets';
+}
+
+function updateTopping() {
+  const mealVal = document.getElementById('meal').value;
+  const sel     = document.getElementById('topping');
+  const hint    = document.getElementById('topping-hint');
+  if (!mealVal) return;
+  const cat  = getCategory(mealVal.split('|')[0]);
+  const tops = TOPPINGS[cat] || [];
+  sel.innerHTML = '<option value="|0">— Bez dodatka —</option>';
+  if (!tops.length) {
+    hint.textContent = 'Nema dostupnih dodataka za ovaj artikal.';
+    sel.disabled = true; return;
+  }
+  sel.disabled = false; hint.textContent = '';
+  tops.forEach(t => {
+    const o = document.createElement('option');
+    o.value = `${t.name}|${t.price}`;
+    o.textContent = `${t.name} — +${t.price} RSD`;
+    sel.appendChild(o);
+  });
+}
+
+function calculateTotal() {
+  const mealVal    = document.getElementById('meal').value;
+  const toppingVal = document.getElementById('topping').value;
+  const amtEl      = document.getElementById('totalAmount');
+  const brkEl      = document.getElementById('totalBreakdown');
+  if (!mealVal) { amtEl.textContent='0'; brkEl.textContent='Odaberi jelo da vidiš cenu'; return; }
+  const [mn,mp] = mealVal.split('|');
+  const [tn,tp] = toppingVal ? toppingVal.split('|') : ['','0'];
+  const total   = parseInt(mp||0)+parseInt(tp||0);
+  amtEl.textContent = total.toLocaleString('sr-RS');
+  let brk = `${mn}: ${parseInt(mp).toLocaleString('sr-RS')} RSD`;
+  if (tn) brk += `\n${tn}: +${parseInt(tp).toLocaleString('sr-RS')} RSD`;
+  brkEl.textContent = brk;
+}
+
+async function submitOrder() {
+  const firstName  = document.getElementById('firstName').value.trim();
+  const lastName   = document.getElementById('lastName').value.trim();
+  const phone      = document.getElementById('phone').value.trim();
+  const mealVal    = document.getElementById('meal').value;
+  const toppingVal = document.getElementById('topping').value;
+  const msgEl      = document.getElementById('formMsg');
+  const btn        = document.getElementById('submitBtn');
+
+  if (!firstName||!lastName||!phone||!mealVal) {
+    show('error','Molimo popunite sva obavezna polja (*).'); return;
+  }
+  if (!window._firebaseReady) {
+    show('error','Firebase nije konfigurisan. Prati uputstvo u kodu.'); return;
+  }
+
+  const [mn,mp] = mealVal.split('|');
+  const [tn,tp] = toppingVal ? toppingVal.split('|') : ['','0'];
+  const total   = parseInt(mp||0)+parseInt(tp||0);
+
+  btn.disabled = true; btn.textContent = 'Šaljem...';
+
+  try {
+    await window._addDoc(window._collection(window._db,'orders'),{
+      firstName, lastName, phone,
+      meal: mn, mealPrice: parseInt(mp),
+      topping: tn||'Bez dodatka', toppingPrice: parseInt(tp||0),
+      total, status:'new',
+      createdAt: window._serverTimestamp()
+    });
+    show('success',`✓ Narudžba primljena! Hvala, ${firstName}. Kontaktiraćemo te na ${phone}.`);
+    document.getElementById('firstName').value='';
+    document.getElementById('lastName').value='';
+    document.getElementById('phone').value='';
+    document.getElementById('meal').value='';
+    document.getElementById('topping').innerHTML='<option value="|0">— Bez dodatka —</option>';
+    document.getElementById('totalAmount').textContent='0';
+    document.getElementById('totalBreakdown').textContent='Odaberi jelo da vidiš cenu';
+  } catch(e) {
+    console.error(e);
+    show('error','Greška pri slanju. Proveri Firebase config ili pokušaj ponovo.');
+  }
+  btn.disabled=false; btn.textContent='Pošalji Narudžbu →';
+}
+
+function show(type,text) {
+  const el=document.getElementById('formMsg');
+  el.className=`form-msg ${type}`; el.textContent=text;
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+window.submitOrder=submitOrder;
+window.calculateTotal=calculateTotal;
+window.updateTopping=updateTopping;
+</script>
+
+</body>
+</html>
