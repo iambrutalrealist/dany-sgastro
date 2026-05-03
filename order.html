@@ -32,7 +32,6 @@
     min-height: 100vh;
   }
 
-  /* ── NAV ── */
   header {
     position: sticky; top: 0; z-index: 100;
     height: 64px;
@@ -59,7 +58,6 @@
   }
   .back-link:hover { color: var(--dark); }
 
-  /* ── HERO STRIP ── */
   .hero-strip {
     background: var(--mid);
     padding: clamp(56px,10vw,100px) 24px clamp(44px,7vw,72px);
@@ -101,14 +99,12 @@
     letter-spacing: 0.5px;
   }
 
-  /* ── FORM CONTAINER ── */
   .form-wrap {
     max-width: 720px;
     margin: 0 auto;
     padding: clamp(48px,8vw,88px) clamp(20px,5vw,48px) clamp(64px,10vw,120px);
   }
 
-  /* ── BLOCK ── */
   .form-block { margin-bottom: 52px; }
 
   .block-title {
@@ -119,7 +115,6 @@
     padding-bottom: 12px; margin-bottom: 28px;
   }
 
-  /* ── FIELDS ── */
   .field-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -172,7 +167,6 @@
     margin-top: 6px; letter-spacing: 0.3px;
   }
 
-  /* ── TOTAL ── */
   .total-box {
     background: var(--dark);
     padding: clamp(28px,5vw,44px) clamp(24px,5vw,48px);
@@ -208,7 +202,6 @@
     font-weight: 300;
   }
 
-  /* ── SUBMIT ── */
   .btn-submit {
     width: 100%;
     background: var(--rust);
@@ -224,7 +217,6 @@
   .btn-submit:hover:not(:disabled) { background: #8a3018; transform: translateY(-1px); }
   .btn-submit:disabled { background: var(--muted); cursor: not-allowed; }
 
-  /* ── MESSAGE ── */
   .form-msg {
     display: none;
     text-align: center;
@@ -246,7 +238,6 @@
     color: var(--error);
   }
 
-  /* ── FOOTER ── */
   footer {
     background: var(--dark);
     padding: clamp(36px,5vw,52px) 24px;
@@ -268,7 +259,6 @@
   .footer-info a { color: var(--gold); text-decoration: none; transition: color .25s; }
   .footer-info a:hover { color: #F2EDE6; }
 
-  /* ── ALIDEDA BUTTON ── */
   .alideda-btn {
     display: inline-flex; align-items: center; gap: 10px;
     border: 1px solid rgba(201,148,58,0.25);
@@ -390,7 +380,6 @@
 
 </div>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-logo">Dany's <em>Gastro</em></div>
   <div class="footer-info">
@@ -402,166 +391,150 @@
   </a>
 </footer>
 
-<!-- ═══════════════════════════════════
-  FIREBASE SETUP:
-  1. console.firebase.google.com → novi projekat
-  2. Firestore Database → Create → Test mode
-  3. Project Settings → Web app → kopiraj firebaseConfig
-  4. Zalijepi ispod (isti config i u kitchen.html)
-═══════════════════════════════════ -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  // ⚠️ ZAMENI SA TVOJIM FIREBASE CONFIGOM
-  const firebaseConfig = {
-    apiKey:            "TVOJ_API_KEY",
-    authDomain:        "TVOJ_PROJECT.firebaseapp.com",
-    projectId:         "TVOJ_PROJECT_ID",
-    storageBucket:     "TVOJ_PROJECT.appspot.com",
-    messagingSenderId: "TVOJ_SENDER_ID",
-    appId:             "TVOJ_APP_ID"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
-
-  window._db              = db;
-  window._addDoc          = addDoc;
-  window._collection      = collection;
-  window._serverTimestamp = serverTimestamp;
-  window._firebaseReady   = true;
-</script>
+<!-- SUPABASE CDN — fixed, was loading jsdelivr.net homepage before -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
-// ── TOPPINGS BY CATEGORY ──────────────────────────────
-const TOPPINGS = {
-  pizza:    [
-    {name:'Kečap',price:60},{name:'Majonez',price:60},
-    {name:'Chilli sos',price:70},{name:'Kajmak',price:120},
-    {name:'Jaje na oko',price:100},{name:'Paradajz svježi',price:80}
-  ],
-  salad:    [
-    {name:'Kečap',price:60},{name:'Majonez',price:60},
-    {name:'Chilli sos',price:70},{name:'Jaje na oko',price:100},
-    {name:'Zelena salata +',price:80},{name:'Pirinač',price:90},
-    {name:'Paradajz svježi',price:80}
-  ],
-  pasta:    [
-    {name:'Kajmak',price:120},{name:'Jaje na oko',price:100},
-    {name:'Chilli sos',price:70},{name:'Luk karamelizovani',price:80},
-    {name:'Pirinač',price:90}
-  ],
-  sandwich: [
-    {name:'Kečap',price:60},{name:'Majonez',price:60},
-    {name:'Chilli sos',price:70},{name:'Kajmak',price:120},
-    {name:'Jaje na oko',price:100},{name:'Zelena salata +',price:80},
-    {name:'Paradajz svježi',price:80},{name:'Luk karamelizovani',price:80}
-  ],
-  sweets: []
-};
+  // ── SUPABASE CONFIG ────────────────────────────────────
+  var SUPABASE_URL      = 'https://anzxaohvvneraeqqhofb.supabase.co'; // fixed URL (was "anzzaohvv" typo on index.html)
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFuenphb2h2dm5lcmFlcXFob2ZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3OTYxODUsImV4cCI6MjA5MzM3MjE4NX0.aA823mK45pd6vV32HiZvEqLx4kxP_9Om7hyf3Y7jYoI';
+  var TABLE_NAME        = 'orders';
 
-function getCategory(name) {
-  if (!name) return null;
-  const n = name.toLowerCase();
-  if (n.includes('pizza'))    return 'pizza';
-  if (n.includes('salata'))   return 'salad';
-  if (n.includes('pasta')||n.includes('carbonara')) return 'pasta';
-  if (n.includes('sendvič')||n.includes('sendvic')) return 'sandwich';
-  return 'sweets';
-}
+  var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-function updateTopping() {
-  const mealVal = document.getElementById('meal').value;
-  const sel     = document.getElementById('topping');
-  const hint    = document.getElementById('topping-hint');
-  if (!mealVal) return;
-  const cat  = getCategory(mealVal.split('|')[0]);
-  const tops = TOPPINGS[cat] || [];
-  sel.innerHTML = '<option value="|0">— Bez dodatka —</option>';
-  if (!tops.length) {
-    hint.textContent = 'Nema dostupnih dodataka za ovaj artikal.';
-    sel.disabled = true; return;
-  }
-  sel.disabled = false; hint.textContent = '';
-  tops.forEach(t => {
-    const o = document.createElement('option');
-    o.value = `${t.name}|${t.price}`;
-    o.textContent = `${t.name} — +${t.price} RSD`;
-    sel.appendChild(o);
-  });
-}
+  // ── TOPPINGS BY CATEGORY ───────────────────────────────
+  var TOPPINGS = {
+    pizza:    [
+      {name:'Kečap',price:60},{name:'Majonez',price:60},
+      {name:'Chilli sos',price:70},{name:'Kajmak',price:120},
+      {name:'Jaje na oko',price:100},{name:'Paradajz svježi',price:80}
+    ],
+    salad:    [
+      {name:'Kečap',price:60},{name:'Majonez',price:60},
+      {name:'Chilli sos',price:70},{name:'Jaje na oko',price:100},
+      {name:'Zelena salata +',price:80},{name:'Pirinač',price:90},
+      {name:'Paradajz svježi',price:80}
+    ],
+    pasta:    [
+      {name:'Kajmak',price:120},{name:'Jaje na oko',price:100},
+      {name:'Chilli sos',price:70},{name:'Luk karamelizovani',price:80},
+      {name:'Pirinač',price:90}
+    ],
+    sandwich: [
+      {name:'Kečap',price:60},{name:'Majonez',price:60},
+      {name:'Chilli sos',price:70},{name:'Kajmak',price:120},
+      {name:'Jaje na oko',price:100},{name:'Zelena salata +',price:80},
+      {name:'Paradajz svježi',price:80},{name:'Luk karamelizovani',price:80}
+    ],
+    sweets: []
+  };
 
-function calculateTotal() {
-  const mealVal    = document.getElementById('meal').value;
-  const toppingVal = document.getElementById('topping').value;
-  const amtEl      = document.getElementById('totalAmount');
-  const brkEl      = document.getElementById('totalBreakdown');
-  if (!mealVal) { amtEl.textContent='0'; brkEl.textContent='Odaberi jelo da vidiš cenu'; return; }
-  const [mn,mp] = mealVal.split('|');
-  const [tn,tp] = toppingVal ? toppingVal.split('|') : ['','0'];
-  const total   = parseInt(mp||0)+parseInt(tp||0);
-  amtEl.textContent = total.toLocaleString('sr-RS');
-  let brk = `${mn}: ${parseInt(mp).toLocaleString('sr-RS')} RSD`;
-  if (tn) brk += `\n${tn}: +${parseInt(tp).toLocaleString('sr-RS')} RSD`;
-  brkEl.textContent = brk;
-}
-
-async function submitOrder() {
-  const firstName  = document.getElementById('firstName').value.trim();
-  const lastName   = document.getElementById('lastName').value.trim();
-  const phone      = document.getElementById('phone').value.trim();
-  const mealVal    = document.getElementById('meal').value;
-  const toppingVal = document.getElementById('topping').value;
-  const msgEl      = document.getElementById('formMsg');
-  const btn        = document.getElementById('submitBtn');
-
-  if (!firstName||!lastName||!phone||!mealVal) {
-    show('error','Molimo popunite sva obavezna polja (*).'); return;
-  }
-  if (!window._firebaseReady) {
-    show('error','Firebase nije konfigurisan. Prati uputstvo u kodu.'); return;
+  function getCategory(name) {
+    if (!name) return null;
+    var n = name.toLowerCase();
+    if (n.indexOf('pizza') !== -1)    return 'pizza';
+    if (n.indexOf('salata') !== -1)   return 'salad';
+    if (n.indexOf('pasta') !== -1 || n.indexOf('carbonara') !== -1) return 'pasta';
+    if (n.indexOf('sendvič') !== -1 || n.indexOf('sendvic') !== -1) return 'sandwich';
+    return 'sweets';
   }
 
-  const [mn,mp] = mealVal.split('|');
-  const [tn,tp] = toppingVal ? toppingVal.split('|') : ['','0'];
-  const total   = parseInt(mp||0)+parseInt(tp||0);
-
-  btn.disabled = true; btn.textContent = 'Šaljem...';
-
-  try {
-    await window._addDoc(window._collection(window._db,'orders'),{
-      firstName, lastName, phone,
-      meal: mn, mealPrice: parseInt(mp),
-      topping: tn||'Bez dodatka', toppingPrice: parseInt(tp||0),
-      total, status:'new',
-      createdAt: window._serverTimestamp()
+  function updateTopping() {
+    var mealVal = document.getElementById('meal').value;
+    var sel     = document.getElementById('topping');
+    var hint    = document.getElementById('topping-hint');
+    if (!mealVal) return;
+    var cat  = getCategory(mealVal.split('|')[0]);
+    var tops = TOPPINGS[cat] || [];
+    sel.innerHTML = '<option value="|0">— Bez dodatka —</option>';
+    if (!tops.length) {
+      hint.textContent = 'Nema dostupnih dodataka za ovaj artikal.';
+      sel.disabled = true; return;
+    }
+    sel.disabled = false; hint.textContent = '';
+    tops.forEach(function(t) {
+      var o = document.createElement('option');
+      o.value = t.name + '|' + t.price;
+      o.textContent = t.name + ' — +' + t.price + ' RSD';
+      sel.appendChild(o);
     });
-    show('success',`✓ Narudžba primljena! Hvala, ${firstName}. Kontaktiraćemo te na ${phone}.`);
-    document.getElementById('firstName').value='';
-    document.getElementById('lastName').value='';
-    document.getElementById('phone').value='';
-    document.getElementById('meal').value='';
-    document.getElementById('topping').innerHTML='<option value="|0">— Bez dodatka —</option>';
-    document.getElementById('totalAmount').textContent='0';
-    document.getElementById('totalBreakdown').textContent='Odaberi jelo da vidiš cenu';
-  } catch(e) {
-    console.error(e);
-    show('error','Greška pri slanju. Proveri Firebase config ili pokušaj ponovo.');
   }
-  btn.disabled=false; btn.textContent='Pošalji Narudžbu →';
-}
 
-function show(type,text) {
-  const el=document.getElementById('formMsg');
-  el.className=`form-msg ${type}`; el.textContent=text;
-  el.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
+  function calculateTotal() {
+    var mealVal    = document.getElementById('meal').value;
+    var toppingVal = document.getElementById('topping').value;
+    var amtEl      = document.getElementById('totalAmount');
+    var brkEl      = document.getElementById('totalBreakdown');
+    if (!mealVal) { amtEl.textContent='0'; brkEl.textContent='Odaberi jelo da vidiš cenu'; return; }
+    var parts  = mealVal.split('|');
+    var mn = parts[0], mp = parts[1];
+    var tparts = toppingVal ? toppingVal.split('|') : ['','0'];
+    var tn = tparts[0], tp = tparts[1];
+    var total = parseInt(mp||0) + parseInt(tp||0);
+    amtEl.textContent = total.toLocaleString('sr-RS');
+    var brk = mn + ': ' + parseInt(mp).toLocaleString('sr-RS') + ' RSD';
+    if (tn) brk += '\n' + tn + ': +' + parseInt(tp).toLocaleString('sr-RS') + ' RSD';
+    brkEl.textContent = brk;
+  }
 
-window.submitOrder=submitOrder;
-window.calculateTotal=calculateTotal;
-window.updateTopping=updateTopping;
+  async function submitOrder() {
+    var firstName  = document.getElementById('firstName').value.trim();
+    var lastName   = document.getElementById('lastName').value.trim();
+    var phone      = document.getElementById('phone').value.trim();
+    var mealVal    = document.getElementById('meal').value;
+    var toppingVal = document.getElementById('topping').value;
+    var btn        = document.getElementById('submitBtn');
+
+    if (!firstName || !lastName || !phone || !mealVal) {
+      showMsg('error', 'Molimo popunite sva obavezna polja (*).'); return;
+    }
+
+    var mparts  = mealVal.split('|');
+    var mn = mparts[0], mp = mparts[1];
+    var tparts  = toppingVal ? toppingVal.split('|') : ['','0'];
+    var tn = tparts[0], tp = tparts[1];
+    var total   = parseInt(mp||0) + parseInt(tp||0);
+
+    btn.disabled = true; btn.textContent = 'Šaljem...';
+
+    // ── INSERT — only columns that exist in your Supabase table ──
+    var { error } = await _sb.from(TABLE_NAME).insert([{
+      customer_name: firstName + ' ' + lastName,  // combined — table has 1 name column
+      items:         mn,                           // meal name
+      toppings:      tn || 'Bez dodatka',          // topping name (your column is "toppings")
+      total:         total,                        // number → Supabase stores as text, parseFloat handles it
+      status:        'new'
+      // created_at: omitted — Supabase sets this automatically
+      // phone: omitted — column doesn't exist in table yet
+    }]);
+
+    if (error) {
+      console.error('Supabase error:', error);
+      showMsg('error', 'Greška pri slanju: ' + error.message);
+    } else {
+      showMsg('success', '✓ Narudžba primljena! Hvala, ' + firstName + '. Kontaktiraćemo te na ' + phone + '.');
+      document.getElementById('firstName').value = '';
+      document.getElementById('lastName').value  = '';
+      document.getElementById('phone').value     = '';
+      document.getElementById('meal').value      = '';
+      document.getElementById('topping').innerHTML = '<option value="|0">— Bez dodatka —</option>';
+      document.getElementById('totalAmount').textContent  = '0';
+      document.getElementById('totalBreakdown').textContent = 'Odaberi jelo da vidiš cenu';
+    }
+
+    btn.disabled = false; btn.textContent = 'Pošalji Narudžbu →';
+  }
+
+  function showMsg(type, text) {
+    var el = document.getElementById('formMsg');
+    el.className = 'form-msg ' + type;
+    el.textContent = text;
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  window.submitOrder    = submitOrder;
+  window.calculateTotal = calculateTotal;
+  window.updateTopping  = updateTopping;
 </script>
 
 </body>
