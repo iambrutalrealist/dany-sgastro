@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dany's Gastro — Moderni Balkanski Koncept</title>
+<script>
+  // Always start at the hero on refresh — disable the browser's scroll restoration
+  // and clear any leftover #hash from a previous in-page jump.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('pageshow', function() {
+    var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')) || [];
+    if (nav[0] && nav[0].type === 'reload') {
+      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+      window.scrollTo(0, 0);
+    }
+  });
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -93,8 +105,31 @@
   }
   .nav-cta:hover { background: var(--rust) !important; }
 
+  .lang-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 34px; height: 34px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: border-color .25s, color .25s, background .25s;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+  }
+  .lang-btn:hover {
+    border-color: var(--gold);
+    color: var(--dark);
+  }
+
   @media (max-width: 700px) {
-    .nav-links li:not(:last-child) { display: none; }
+    .nav-links li:not(:nth-last-child(-n+2)) { display: none; }
+    .nav-links { gap: 14px; }
     .nav-logo { font-size: 17px; }
   }
 
@@ -112,19 +147,11 @@
   .hero-bg {
     position: absolute;
     inset: 0;
-    background-image: url('hero-bg.jpg');
+    background-image: url('1r.jpg');
     background-size: cover;
     background-position: center;
-    filter: blur(6px) brightness(0.65) saturate(0.8);
+    filter: blur(5px) brightness(0.7) saturate(0.9);
     transform: scale(1.07);
-  }
-
-  .hero-video {
-    position: absolute;
-    inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: center;
   }
 
   .hero-overlay {
@@ -236,6 +263,27 @@
   @keyframes bounce {
     0%,100% { transform: translateX(-50%) translateY(0); }
     50%      { transform: translateX(-50%) translateY(7px); }
+  }
+
+  /* Hero entry — staggered fade-up on page load */
+  @keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes heroFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .hero-tag     { animation: heroFadeUp .9s  .15s ease-out both; }
+  .hero-title   { animation: heroFadeUp 1s   .3s  ease-out both; }
+  .hero-sub     { animation: heroFadeUp .9s  .55s ease-out both; }
+  .hero-buttons { animation: heroFadeUp .9s  .75s ease-out both; }
+  /* hero-scroll uses transform for the bounce — fade it in via opacity only */
+  .hero-scroll  { animation: heroFadeIn  .8s 1.15s ease-out both, bounce 2.5s ease 2s infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-tag, .hero-title, .hero-sub, .hero-buttons, .hero-scroll {
+      animation: none;
+    }
   }
 
   .marquee {
@@ -415,10 +463,14 @@
 
   .photo-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    height: clamp(240px, 42vw, 580px);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
   }
-  .photo-row .pr { overflow: hidden; position: relative; }
+  .photo-row .pr {
+    overflow: hidden;
+    position: relative;
+    height: clamp(180px, 26vw, 340px);
+  }
   .photo-row img {
     width: 100%; height: 100%;
     object-fit: cover;
@@ -443,9 +495,12 @@
     color: #F2EDE6;
   }
 
+  @media (max-width: 900px) {
+    .photo-row { grid-template-columns: repeat(2, 1fr); }
+  }
   @media (max-width: 580px) {
-    .photo-row { grid-template-columns: 1fr; height: auto; }
-    .photo-row .pr { height: 260px; }
+    .photo-row { grid-template-columns: 1fr; }
+    .photo-row .pr { height: 240px; }
   }
 
   .vibe-section { background: var(--cream2); }
@@ -490,6 +545,137 @@
     text-transform: uppercase;
     color: var(--muted);
     margin-top: 6px;
+  }
+
+  .s-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    max-width: 1200px;
+    margin: 64px auto 0;
+  }
+  .s-grid .si {
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+  }
+  .s-grid img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(.85) contrast(1.03);
+    transition: filter .5s, transform .6s;
+    display: block;
+  }
+  .s-grid .si:hover img { filter: saturate(1.05); transform: scale(1.05); }
+
+  @media (max-width: 760px) {
+    .s-grid { grid-template-columns: repeat(2, 1fr); gap: 3px; }
+  }
+
+  .location-section { background: var(--bg); }
+  .location-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 62px);
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.12;
+    margin-bottom: 20px;
+    max-width: 620px;
+    margin-left: auto; margin-right: auto;
+  }
+  .location-section h2 em { font-style: italic; color: var(--rust); font-weight: 400; }
+  .location-section > p {
+    font-size: clamp(13px, 1.5vw, 15px);
+    color: var(--muted);
+    line-height: 2;
+    max-width: 520px;
+    margin: 0 auto 56px;
+  }
+
+  .location-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 4px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .map-wrap {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--cream2);
+    border: 1px solid var(--border);
+  }
+  .map-wrap iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    border: 0;
+    filter: saturate(.9) contrast(1.02);
+  }
+  .location-info {
+    background: var(--cream2);
+    padding: clamp(28px, 4vw, 52px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 32px;
+    border: 1px solid var(--border);
+  }
+  .info-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    border-bottom: 1px solid rgba(201,148,58,.2);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+  }
+  .info-content {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    color: var(--dark);
+    line-height: 1.5;
+  }
+  .info-content a {
+    color: var(--rust);
+    text-decoration: none;
+    transition: color .25s;
+  }
+  .info-content a:hover { color: var(--gold); }
+  .info-sub {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-top: 4px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .hours-list { display: flex; flex-direction: column; gap: 0; }
+  .hour-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(26,26,26,.07);
+  }
+  .hour-row:last-child { border-bottom: none; }
+  .hour-row .hour-day {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hour-row .hour-time {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: var(--dark);
+  }
+  .hour-row.today .hour-time { color: var(--rust); font-style: italic; }
+  .hour-row.today .hour-day { color: var(--rust); }
+
+  @media (max-width: 800px) {
+    .location-grid { grid-template-columns: 1fr; }
+    .map-wrap { aspect-ratio: 16 / 11; }
   }
 
   .contact-section { background: var(--mid); color: #F2EDE6; }
@@ -651,110 +837,275 @@
 <nav>
   <a href="#" class="nav-logo">Dany's <em>Gastro</em></a>
   <ul class="nav-links">
-    <li><a href="#o-nama">O Nama</a></li>
-    <li><a href="#meni">Meni</a></li>
-    <li><a href="#kontakt">Kontakt</a></li>
-    <li><a href="order.html" class="nav-cta">Naruči →</a></li>
+    <li><a href="#o-nama" data-en="About">O Nama</a></li>
+    <li><a href="#meni" data-en="Menu">Meni</a></li>
+    <li><a href="#lokacija" data-en="Location">Lokacija</a></li>
+    <li><a href="#kontakt" data-en="Contact">Kontakt</a></li>
+    <li><button id="lang-toggle" class="lang-btn" type="button" aria-label="Toggle language">EN</button></li>
+    <li><a href="order.html" class="nav-cta" data-en="Order →">Naruči →</a></li>
   </ul>
 </nav>
 
 <!-- ════ HERO ════ -->
 <section class="hero">
   <div class="hero-bg"></div>
-  <video class="hero-video" autoplay muted loop playsinline preload="auto">
-    <source src="hero.mp4" type="video/mp4">
-  </video>
   <div class="hero-overlay"></div>
 
   <div class="hero-content">
-    <div class="hero-tag">Beograd · Moderni Balkanski Koncept</div>
+    <div class="hero-tag" data-en="Kruševac · Modern Balkan Concept">Kruševac · Moderni Balkanski Koncept</div>
     <h1 class="hero-title">Dany's<br><em>Gastro</em></h1>
     <p class="hero-sub">
-      Gde autentični Balkan susreće savremeni lifestyle.<br>
-      Svaki zalogaj — priča za pamćenje.
+      <span data-en="Where authentic Balkan meets a modern lifestyle.">Gde autentični Balkan susreće savremeni lifestyle.</span><br>
+      <span data-en="Every bite — a story to remember.">Svaki zalogaj — priča za pamćenje.</span>
     </p>
     <div class="hero-buttons">
-      <a href="order.html" class="btn-primary">Naruči Online</a>
-      <a href="#meni" class="btn-ghost">Pogledaj Meni</a>
+      <a href="order.html" class="btn-primary" data-en="Order Online">Naruči Online</a>
+      <a href="#meni" class="btn-ghost" data-en="View Menu">Pogledaj Meni</a>
     </div>
-  </div>
-
-  <div class="hero-scroll">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-      <path d="M12 5v14M5 12l7 7 7-7"/>
-    </svg>
   </div>
 </section>
 
 <!-- ════ MARQUEE ════ -->
 <div class="marquee">
   <div class="marquee-track">
-    <span>Balkanska duša</span><span>Moderni ukus</span><span>Domaće srce</span>
-    <span>Svježi sastojci</span><span>Dany's Gastro</span><span>Gastronomski ritual</span>
-    <span>Kultura stola</span><span>Balkanska duša</span><span>Moderni ukus</span>
-    <span>Domaće srce</span><span>Svježi sastojci</span><span>Dany's Gastro</span>
-    <span>Gastronomski ritual</span><span>Kultura stola</span>
+    <span data-en="Balkan soul">Balkanska duša</span><span data-en="Modern taste">Moderni ukus</span><span data-en="Homemade heart">Domaće srce</span>
+    <span data-en="Fresh ingredients">Sveži sastojci</span><span>Dany's Gastro</span><span data-en="Gastronomic ritual">Gastronomski ritual</span>
+    <span data-en="Table culture">Kultura stola</span><span data-en="Balkan soul">Balkanska duša</span><span data-en="Modern taste">Moderni ukus</span>
+    <span data-en="Homemade heart">Domaće srce</span><span data-en="Fresh ingredients">Sveži sastojci</span><span>Dany's Gastro</span>
+    <span data-en="Gastronomic ritual">Gastronomski ritual</span><span data-en="Table culture">Kultura stola</span>
   </div>
 </div>
 
 <!-- ════ ABOUT ════ -->
 <section class="section" id="o-nama">
   <div class="about-wrap">
-    <div class="section-tag">Naša filozofija</div>
-    <h2>Balkan koji nisi<br><em>zapamtio.</em></h2>
+    <h2><span data-en="The Balkans you didn't">Balkan koji nisi</span><br><em><span data-en="remember">zapamtio</span>.</em></h2>
     <blockquote class="about-quote">
-      "Hrana nije samo gorivo — hrana je jezik.<br>I mi govorimo tečno."
+      <span data-en="&quot;Food isn't just fuel — food is a language.">"Hrana nije samo gorivo — hrana je jezik.</span><br><span data-en="And we speak it fluently.&quot;">I mi govorimo tečno."</span>
     </blockquote>
-    <p>Dany's Gastro nije restoran. To je stav. Ovde se ukrštaju uska čokanjska ulica i beogradski noćni život, kajmak i craft kokteli, stara majka i DJ set.</p>
-    <p>Uzeli smo sve što volimo na Balkanu — toplinu, direktnost, zajednički sto — i podigli to na nivo koji nisi očekivao. Svaki zalogaj je svjež. Svaki trenutak je zamišljen.</p>
+    <p data-en="Dany's Gastro isn't a restaurant. It's a statement. Here narrow tavern alleys meet Kruševac nightlife, kajmak meets craft cocktails, an old grandmother meets a DJ set.">Dany's Gastro nije restoran. To je stav. Ovde se ukrštaju uska čokanjska ulica i kruševački noćni život, kajmak i craft kokteli, stara majka i DJ set.</p>
+    <p data-en="We took everything we love about the Balkans — warmth, directness, the shared table — and elevated it to a level you didn't expect. Every bite is fresh. Every moment is intentional.">Uzeli smo sve što volimo na Balkanu — toplinu, direktnost, zajednički sto — i podigli to na nivo koji nisi očekivao. Svaki zalogaj je svež. Svaki trenutak je promišljen.</p>
   </div>
 </section>
 
-<!-- ════ PHOTO STRIP ════ -->
-<div class="photo-strip-wrap">
-  <div class="photo-strip">
-    <div class="pi big">
-      <img src="restaurant1.jpg" alt="Dany's Gastro enterijer" loading="lazy">
-    </div>
-    <div class="pi">
-      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80&auto=format&fit=crop" alt="Restoran" loading="lazy">
-    </div>
-    <div class="pi">
-      <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80&auto=format&fit=crop" alt="Atmosfera" loading="lazy">
-    </div>
-  </div>
-</div>
-
 <!-- ════ MENU ════ -->
 <section class="menu-section" id="meni">
-  <div class="section-tag">Naš meni</div>
-  <h2>Šta <em>kuvamo</em> danas.</h2>
-  <p class="menu-intro">Svježe pripremljeno svakog jutra — bez kompromisa.</p>
+  <div class="section-tag" data-en="Our menu">Naš meni</div>
+  <h2><span data-en="What we're">Šta</span> <em><span data-en="cooking">kuvamo</span></em> <span data-en="today.">danas.</span></h2>
+  <p class="menu-intro" data-en="Freshly prepared every morning — no compromise.">Sveže pripremljeno svakog jutra — bez kompromisa.</p>
 
   <div class="menu-grid">
 
+    <!-- ─── CHEF'S SPECIALS ─── -->
+    <div class="menu-cat-block">
+      <div class="menu-cat-title">👨‍🍳 Specijaliteti Šefa</div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Arancini Trio</div><div class="menu-item-desc">Tri vrste arancina sa biljnim umakom — predjelo šefa</div></div>
+        <div class="menu-item-price">1480 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Biftek Chimichurri</div><div class="menu-item-desc">Goveđi biftek, argentinski biljni sos, pečen krompir</div></div>
+        <div class="menu-item-price">2680 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Jagnjeća Pečenica</div><div class="menu-item-desc">Polako pečena jagnjetina u demi-glace redukciji</div></div>
+        <div class="menu-item-price">2480 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Medaljoni od Bifteka</div><div class="menu-item-desc">Pire od celera, jus od crnog vina, mikro-zelenilo</div></div>
+        <div class="menu-item-price">2380 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pollo alla Cacciatora</div><div class="menu-item-desc">Pile u sosu od maslina, kapara i paradajza</div></div>
+        <div class="menu-item-price">1480 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pačja Prsa</div><div class="menu-item-desc">Konfitirana, redukcija crnog vina, karamelizovan luk</div></div>
+        <div class="menu-item-price">2180 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Losos na Maslacu</div><div class="menu-item-desc">Pan-seared losos, krem sos sa šampinjonima</div></div>
+        <div class="menu-item-price">1980 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Tagliata di Manzo</div><div class="menu-item-desc">Tanko sečen biftek, rukola, parmigiano, balsamico</div></div>
+        <div class="menu-item-price">2280 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Sarma od Mladog Kupusa</div><div class="menu-item-desc">Mlada sarma punjena junetinom i pirinčem, kajmak</div></div>
+        <div class="menu-item-price">980 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Punjene Paprike</div><div class="menu-item-desc">Babure punjene junetinom i pirinčem u paradajz sosu</div></div>
+        <div class="menu-item-price">980 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Sarajevski Ćevapi 10/1</div><div class="menu-item-desc">10 ćevapa, somun, sitno seckani crveni luk, kajmak</div></div>
+        <div class="menu-item-price">1280 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Ćulbastija na Žaru</div><div class="menu-item-desc">Svinjski but sa žara, urnebes salata, lepinja</div></div>
+        <div class="menu-item-price">1380 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Vešalica sa Kajmakom</div><div class="menu-item-desc">Sušeni svinjski vrat na žaru, mladi kajmak, lepinja</div></div>
+        <div class="menu-item-price">1480 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Mešano Meso na Roštilju</div><div class="menu-item-desc">Ćevapi, ražnjići, vešalica i pljeskavica za jednu osobu</div></div>
+        <div class="menu-item-price">1880 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Karađorđeva Šnicla</div><div class="menu-item-desc">Teleća pečenica punjena kajmakom, panirana, tartar sos</div></div>
+        <div class="menu-item-price">1980 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Janjetina Ispod Sača</div><div class="menu-item-desc">Polako pečena jagnjetina, krompir, rozmarin, beli luk</div></div>
+        <div class="menu-item-price">2880 rsd</div>
+      </div>
+    </div>
+
+    <!-- ─── PIZZE ─── -->
     <div class="menu-cat-block">
       <div class="menu-cat-title">🍕 Pizze</div>
       <div class="menu-item-row">
-        <div><div class="menu-item-name">Pizza Capricciosa</div><div class="menu-item-desc">Paradajz sos, mocarela, šunka, pečurke, masline</div></div>
-        <div class="menu-item-price">850 rsd</div>
+        <div><div class="menu-item-name">Pizza Margherita</div><div class="menu-item-desc">Paradajz sos, sveža mocarela, bosiljak, maslinovo ulje</div></div>
+        <div class="menu-item-price">720 rsd</div>
       </div>
       <div class="menu-item-row">
         <div><div class="menu-item-name">Pizza Italiana</div><div class="menu-item-desc">Paradajz sos, mocarela, bosiljak, maslinovo ulje</div></div>
         <div class="menu-item-price">790 rsd</div>
       </div>
       <div class="menu-item-row">
+        <div><div class="menu-item-name">Pizza Capricciosa</div><div class="menu-item-desc">Paradajz sos, mocarela, šunka, pečurke, masline</div></div>
+        <div class="menu-item-price">850 rsd</div>
+      </div>
+      <div class="menu-item-row">
         <div><div class="menu-item-name">Pizza Diavola</div><div class="menu-item-desc">Ljuti paradajz sos, pikantna salama, chilli</div></div>
         <div class="menu-item-price">870 rsd</div>
       </div>
       <div class="menu-item-row">
-        <div><div class="menu-item-name">Pizza Margherita</div><div class="menu-item-desc">Klasični paradajz sos, svježa mocarela, bosiljak</div></div>
-        <div class="menu-item-price">720 rsd</div>
+        <div><div class="menu-item-name">Pizza Tonno</div><div class="menu-item-desc">Tuna, crveni luk, masline, mocarela, paradajz</div></div>
+        <div class="menu-item-price">890 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pizza Quattro Stagioni</div><div class="menu-item-desc">Šunka, pečurke, artičoke, masline — četiri sezone</div></div>
+        <div class="menu-item-price">920 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pizza Quattro Formaggi</div><div class="menu-item-desc">Mocarela, gorgonzola, parmigiano, kozji sir</div></div>
+        <div class="menu-item-price">920 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pizza Calzone</div><div class="menu-item-desc">Punjena šunka, pečurke, mocarela, ricotta</div></div>
+        <div class="menu-item-price">950 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pizza Vegetariana</div><div class="menu-item-desc">Tikvice, plavi patlidžan, paprika, cherry paradajz</div></div>
+        <div class="menu-item-price">850 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pizza Prosciutto e Rucola</div><div class="menu-item-desc">Prosciutto crudo, rukola, parmigiano, mocarela</div></div>
+        <div class="menu-item-price">1050 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pizza Burrata</div><div class="menu-item-desc">Cherry paradajz, burrata, bosiljak, maslinovo ulje</div></div>
+        <div class="menu-item-price">1180 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pizza Tartufo</div><div class="menu-item-desc">Krem od tartufa, šampinjoni, parmigiano, mocarela</div></div>
+        <div class="menu-item-price">1280 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pizza Frutti di Mare</div><div class="menu-item-desc">Plodovi mora, paradajz sos, beli luk, peršun</div></div>
+        <div class="menu-item-price">1320 rsd</div>
       </div>
     </div>
 
+    <!-- ─── TJESTENINE ─── -->
+    <div class="menu-cat-block">
+      <div class="menu-cat-title">🍝 Testenine</div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pasta Carbonara</div><div class="menu-item-desc">Spaghetti, panceta, žumance, pecorino romano</div></div>
+        <div class="menu-item-price">750 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Spaghetti Bolognese</div><div class="menu-item-desc">Domaći ragu od junetine, paradajz, parmigiano</div></div>
+        <div class="menu-item-price">820 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Penne all'Arrabbiata</div><div class="menu-item-desc">Ljuti paradajz sos, beli luk, chilli, peršun</div></div>
+        <div class="menu-item-price">720 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Fettuccine Alfredo</div><div class="menu-item-desc">Krem sos, parmigiano, sveži peršun</div></div>
+        <div class="menu-item-price">780 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Tagliatelle al Pesto</div><div class="menu-item-desc">Domaći pesto, pinjoli, parmigiano, bosiljak</div></div>
+        <div class="menu-item-price">790 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pasta ai Funghi</div><div class="menu-item-desc">Tagliatelle, šampinjoni, krem, tartuf ulje</div></div>
+        <div class="menu-item-price">880 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Lasagne alla Bolognese</div><div class="menu-item-desc">Domaća lazanja, ragu, bešamel, parmigiano</div></div>
+        <div class="menu-item-price">920 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Ravioli Ricotta e Spinaci</div><div class="menu-item-desc">Punjeni ricottom i spanaćem, puter sa salvijom</div></div>
+        <div class="menu-item-price">950 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Gnocchi Gorgonzola</div><div class="menu-item-desc">Domaći njoki, sir gorgonzola, mleveni orasi</div></div>
+        <div class="menu-item-price">880 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Spaghetti alle Vongole</div><div class="menu-item-desc">Plodovi mora, beli luk, belo vino, peršun</div></div>
+        <div class="menu-item-price">1180 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Spaghetti Aglio e Olio</div><div class="menu-item-desc">Maslinovo ulje, beli luk, čili papričica, peršun</div></div>
+        <div class="menu-item-price">680 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Cacio e Pepe</div><div class="menu-item-desc">Tonarelli, pecorino romano, crni biber, maslac</div></div>
+        <div class="menu-item-price">780 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Spaghetti al Limone</div><div class="menu-item-desc">Krem od limuna, parmigiano, korica limuna, bosiljak</div></div>
+        <div class="menu-item-price">820 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pasta Puttanesca</div><div class="menu-item-desc">Paradajz sos, masline, kapari, inćuni, čili</div></div>
+        <div class="menu-item-price">820 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pasta all'Amatriciana</div><div class="menu-item-desc">Bucatini, guanciale, paradajz, pecorino, čili</div></div>
+        <div class="menu-item-price">850 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pasta alla Norma</div><div class="menu-item-desc">Plavi patlidžan, paradajz, ricotta salata, bosiljak</div></div>
+        <div class="menu-item-price">850 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pappardelle al Cinghiale</div><div class="menu-item-desc">Široka pasta, ragu od divlje svinje, parmigiano</div></div>
+        <div class="menu-item-price">1080 rsd</div>
+      </div>
+    </div>
+
+    <!-- ─── SALATE ─── -->
     <div class="menu-cat-block">
       <div class="menu-cat-title">🥗 Salate</div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Šopska Salata</div><div class="menu-item-desc">Paradajz, krastavac, paprika, crveni luk, sirenje</div></div>
+        <div class="menu-item-price">480 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Grčka Salata</div><div class="menu-item-desc">Feta, masline, krastavac, paradajz, origano</div></div>
+        <div class="menu-item-price">590 rsd</div>
+      </div>
       <div class="menu-item-row">
         <div><div class="menu-item-name">Cezar Salata</div><div class="menu-item-desc">Romaine, grilovana piletina, krutoni, parmigiano</div></div>
         <div class="menu-item-price">680 rsd</div>
@@ -763,27 +1114,313 @@
         <div><div class="menu-item-name">Tuna Salata</div><div class="menu-item-desc">Premium tuna, masline, kapari, cherry paradajz</div></div>
         <div class="menu-item-price">650 rsd</div>
       </div>
-      <div class="menu-cat-title second" style="margin-top:24px">🍝 Tjestenine</div>
       <div class="menu-item-row">
-        <div><div class="menu-item-name">Pasta Carbonara</div><div class="menu-item-desc">Spaghetti, panceta, žumance, pecorino romano</div></div>
-        <div class="menu-item-price">750 rsd</div>
+        <div><div class="menu-item-name">Caprese</div><div class="menu-item-desc">Mocarela di bufala, paradajz, bosiljak, maslinovo ulje</div></div>
+        <div class="menu-item-price">720 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Salata Niçoise</div><div class="menu-item-desc">Tuna, kuvano jaje, krompir, boranija, masline</div></div>
+        <div class="menu-item-price">780 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Quinoa Bowl</div><div class="menu-item-desc">Quinoa, avokado, slatki krompir, edamame, citrus</div></div>
+        <div class="menu-item-price">780 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Rukola sa Prosciuttom</div><div class="menu-item-desc">Rukola, prosciutto crudo, parmigiano, sveža kruška</div></div>
+        <div class="menu-item-price">820 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Cobb Salata</div><div class="menu-item-desc">Piletina, slanina, jaje, avokado, plavi sir</div></div>
+        <div class="menu-item-price">850 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Salata sa Lososom</div><div class="menu-item-desc">Dimljeni losos, mix lista, avokado, dressing od citrusa</div></div>
+        <div class="menu-item-price">920 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Krastavac sa Pavlakom</div><div class="menu-item-desc">Mladi krastavac, domaća pavlaka, beli luk, kopar</div></div>
+        <div class="menu-item-price">380 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Krompir Salata</div><div class="menu-item-desc">Kuvani krompir, crveni luk, peršun, maslinovo ulje</div></div>
+        <div class="menu-item-price">420 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Vitamin Salata</div><div class="menu-item-desc">Šargarepa, beli kupus, jabuka, limun, med</div></div>
+        <div class="menu-item-price">460 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pečena Paprika u Ulju</div><div class="menu-item-desc">Domaća pečena paprika, beli luk, peršun, ulje</div></div>
+        <div class="menu-item-price">520 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Salata od Cvekle</div><div class="menu-item-desc">Pečena cvekla, orasi, kozji sir, listići rukole</div></div>
+        <div class="menu-item-price">540 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Salata Mediteran</div><div class="menu-item-desc">Cherry paradajz, masline, feta, krastavac, origano</div></div>
+        <div class="menu-item-price">620 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Salata Waldorf</div><div class="menu-item-desc">Jabuka, celer, orasi, grožđe, dresing sa majonezom</div></div>
+        <div class="menu-item-price">640 rsd</div>
       </div>
     </div>
 
+    <!-- ─── SENDVIČI ─── -->
     <div class="menu-cat-block">
       <div class="menu-cat-title">🥪 Sendviči</div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Brzi Sendvič</div><div class="menu-item-desc">Šunka, sir, karamelizovani luk, topli</div></div>
+        <div class="menu-item-price">430 rsd</div>
+      </div>
       <div class="menu-item-row">
         <div><div class="menu-item-name">Index Sendvič</div><div class="menu-item-desc">Pileći file, zelena salata, paradajz, majonez</div></div>
         <div class="menu-item-price">520 rsd</div>
       </div>
       <div class="menu-item-row">
-        <div><div class="menu-item-name">Brzi Sendvič</div><div class="menu-item-desc">Šunka, sir, karamelizovani luk, topli</div></div>
-        <div class="menu-item-price">430 rsd</div>
+        <div><div class="menu-item-name">Caprese Panini</div><div class="menu-item-desc">Mocarela, paradajz, bosiljak, maslinovo ulje</div></div>
+        <div class="menu-item-price">540 rsd</div>
       </div>
-      <div class="menu-cat-title second" style="margin-top:24px">🍮 Slatkiši</div>
       <div class="menu-item-row">
-        <div><div class="menu-item-name">Tiramisu Kolač</div><div class="menu-item-desc">Mascarpone, espresso, kakao prah — klasik</div></div>
+        <div><div class="menu-item-name">Veggie Sandwich</div><div class="menu-item-desc">Grilovano povrće, humus, avokado, klice</div></div>
+        <div class="menu-item-price">580 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Tuna Melt</div><div class="menu-item-desc">Tuna, topljen sir, paradajz, na tostiranom hlebu</div></div>
+        <div class="menu-item-price">590 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Club Sendvič</div><div class="menu-item-desc">Tostirani hleb, piletina, slanina, jaje, paradajz</div></div>
+        <div class="menu-item-price">680 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Prosciutto Panini</div><div class="menu-item-desc">Prosciutto crudo, mocarela, rukola, paradajz</div></div>
+        <div class="menu-item-price">720 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pulled Pork Sandwich</div><div class="menu-item-desc">Sporo pečena svinjetina, BBQ sos, coleslaw</div></div>
+        <div class="menu-item-price">780 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Philly Cheese Steak</div><div class="menu-item-desc">Junetina, paprika, luk, topljen sir</div></div>
+        <div class="menu-item-price">890 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Steak Sandwich</div><div class="menu-item-desc">Junetina, karamelizovani luk, rukola, gorgonzola</div></div>
+        <div class="menu-item-price">920 rsd</div>
+      </div>
+    </div>
+
+    <!-- ─── SLATKIŠI ─── -->
+    <div class="menu-cat-block">
+      <div class="menu-cat-title">🍰 Slatkiši</div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Krempita</div><div class="menu-item-desc">Tradicionalna krempita sa vanilom — domaća</div></div>
+        <div class="menu-item-price">320 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Domaći Kolačići (4 kom.)</div><div class="menu-item-desc">Asortiman ručno pravljenih kolačića</div></div>
+        <div class="menu-item-price">320 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Šam Rolat</div><div class="menu-item-desc">Domaći biskvit rolat sa šumskim voćem</div></div>
+        <div class="menu-item-price">350 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Tiramisu</div><div class="menu-item-desc">Mascarpone, espresso, savojarde, kakao prah</div></div>
         <div class="menu-item-price">380 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Panna Cotta</div><div class="menu-item-desc">Italijanski vanila krem, sos od šumskog voća</div></div>
+        <div class="menu-item-price">380 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Affogato</div><div class="menu-item-desc">Vanila sladoled preliven vrućim espressom</div></div>
+        <div class="menu-item-price">380 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Profiteroli</div><div class="menu-item-desc">Punjeni vanilom, prelivenim topljenom čokoladom</div></div>
+        <div class="menu-item-price">380 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Cheesecake</div><div class="menu-item-desc">Klasični NY stil, sos od jagode ili šumskog voća</div></div>
+        <div class="menu-item-price">420 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Apple Crumble</div><div class="menu-item-desc">Pečene jabuke, krckavi preliv, kuglica sladoleda</div></div>
+        <div class="menu-item-price">420 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Brownie</div><div class="menu-item-desc">Topli čokoladni brownie, sladoled, orasi</div></div>
+        <div class="menu-item-price">440 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Crème Brûlée</div><div class="menu-item-desc">Vanila krem, karamelizovani sloj šećera</div></div>
+        <div class="menu-item-price">440 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Fondant Čokoladni</div><div class="menu-item-desc">Topli lava kolač, topljena čokolada u sredini</div></div>
+        <div class="menu-item-price">460 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Voćni Tanjir</div><div class="menu-item-desc">Sveže sezonsko voće, med, listići mente</div></div>
+        <div class="menu-item-price">460 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Macaron Trio</div><div class="menu-item-desc">Pistać, malina, čokolada — francuski klasik</div></div>
+        <div class="menu-item-price">480 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Banana Split</div><div class="menu-item-desc">Banana, tri kuglice sladoleda, čokolada, šlag</div></div>
+        <div class="menu-item-price">520 rsd</div>
+      </div>
+    </div>
+
+    <!-- ─── VINA ─── -->
+    <div class="menu-cat-block">
+      <div class="menu-cat-title">🍷 Vina</div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Tikveš Vranac</div><div class="menu-item-desc">Crveno suvo · Severna Makedonija · čaša 380 rsd</div></div>
+        <div class="menu-item-price">2400 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Vranac Pro Corde</div><div class="menu-item-desc">Crveno suvo · Plantaže (CG) · čaša 450 rsd</div></div>
+        <div class="menu-item-price">2800 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Radovanović Cabernet</div><div class="menu-item-desc">Crveno suvo · Šumadija (SRB) · čaša 480 rsd</div></div>
+        <div class="menu-item-price">3200 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Aleksandrović Trijumf Noir</div><div class="menu-item-desc">Crveno suvo · Oplenac (SRB) · čaša 520 rsd</div></div>
+        <div class="menu-item-price">3600 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Matalj Kremen</div><div class="menu-item-desc">Crveno suvo · Negotin (SRB) · čaša 580 rsd</div></div>
+        <div class="menu-item-price">4200 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Chianti Classico DOCG</div><div class="menu-item-desc">Crveno suvo · Toskana (IT) · čaša 620 rsd</div></div>
+        <div class="menu-item-price">4400 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Amarone della Valpolicella</div><div class="menu-item-desc">Crveno suvo · Veneto (IT) · čaša 980 rsd</div></div>
+        <div class="menu-item-price">8800 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Tikveš Žilavka</div><div class="menu-item-desc">Belo suvo · Mostar (BiH) · čaša 380 rsd</div></div>
+        <div class="menu-item-price">2400 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Krauthaker Graševina</div><div class="menu-item-desc">Belo suvo · Slavonija (HR) · čaša 420 rsd</div></div>
+        <div class="menu-item-price">2800 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Pinot Grigio delle Venezie</div><div class="menu-item-desc">Belo suvo · Veneto (IT) · čaša 440 rsd</div></div>
+        <div class="menu-item-price">2900 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Aleksandrović Trijumf Beli</div><div class="menu-item-desc">Belo suvo · Oplenac (SRB) · čaša 480 rsd</div></div>
+        <div class="menu-item-price">3400 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Chardonnay Marlborough</div><div class="menu-item-desc">Belo suvo · Marlborough (NZ) · čaša 560 rsd</div></div>
+        <div class="menu-item-price">3900 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Sancerre Loire</div><div class="menu-item-desc">Belo suvo · Sauvignon Blanc (FR) · čaša 680 rsd</div></div>
+        <div class="menu-item-price">4800 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Provence Rosé</div><div class="menu-item-desc">Roze suvo · Provansa (FR) · čaša 520 rsd</div></div>
+        <div class="menu-item-price">3600 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Prosecco DOC</div><div class="menu-item-desc">Penušavo suvo · Veneto (IT) · čaša 480 rsd</div></div>
+        <div class="menu-item-price">3200 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Moët &amp; Chandon Impérial</div><div class="menu-item-desc">Šampanjac brut · Champagne (FR) · čaša 1280 rsd</div></div>
+        <div class="menu-item-price">11800 rsd</div>
+      </div>
+    </div>
+
+    <!-- ─── PIĆE ─── -->
+    <div class="menu-cat-block">
+      <div class="menu-cat-title">💧 Voda &amp; Sokovi</div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Rosa 0.33L</div><div class="menu-item-desc">Negazirana izvorska voda</div></div>
+        <div class="menu-item-price">180 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Rosa 0.75L</div><div class="menu-item-desc">Negazirana izvorska voda</div></div>
+        <div class="menu-item-price">280 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Aqua Viva 0.5L</div><div class="menu-item-desc">Negazirana / gazirana — po izboru</div></div>
+        <div class="menu-item-price">200 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Knjaz Miloš 0.25L</div><div class="menu-item-desc">Mineralna gazirana voda</div></div>
+        <div class="menu-item-price">180 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Knjaz Miloš 0.75L</div><div class="menu-item-desc">Mineralna gazirana voda</div></div>
+        <div class="menu-item-price">300 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">San Pellegrino 0.5L</div><div class="menu-item-desc">Italijanska mineralna voda</div></div>
+        <div class="menu-item-price">380 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Sveže Ceđena Pomorandža</div><div class="menu-item-desc">100% sveže ceđen sok od pomorandže</div></div>
+        <div class="menu-item-price">380 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Sveže Ceđena Jabuka</div><div class="menu-item-desc">Sveže ceđen sok od jabuke i đumbira</div></div>
+        <div class="menu-item-price">360 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Sveže Ceđena Šargarepa</div><div class="menu-item-desc">Sveže ceđen sok od šargarepe i jabuke</div></div>
+        <div class="menu-item-price">340 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Limunada Klasik</div><div class="menu-item-desc">Sveži limun, voda, šećer u sirupu</div></div>
+        <div class="menu-item-price">320 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Limunada sa Mentom</div><div class="menu-item-desc">Sveži limun, listići mente, gazirana voda</div></div>
+        <div class="menu-item-price">360 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Ledeni Čaj</div><div class="menu-item-desc">Breskva ili limun — po izboru</div></div>
+        <div class="menu-item-price">280 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Smoothie Jagoda</div><div class="menu-item-desc">Jagoda, banana, jogurt, med</div></div>
+        <div class="menu-item-price">420 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Smoothie Malina</div><div class="menu-item-desc">Malina, banana, mleko, med</div></div>
+        <div class="menu-item-price">420 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Smoothie Banana</div><div class="menu-item-desc">Banana, mleko, kakao, med</div></div>
+        <div class="menu-item-price">380 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Granini Voćni Sok 0.2L</div><div class="menu-item-desc">Pomorandža · jabuka · jagoda · multivitamin</div></div>
+        <div class="menu-item-price">280 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Coca-Cola / Fanta / Sprite</div><div class="menu-item-desc">0.25L — flaša</div></div>
+        <div class="menu-item-price">250 rsd</div>
+      </div>
+      <div class="menu-item-row">
+        <div><div class="menu-item-name">Schweppes Tonic / Bitter</div><div class="menu-item-desc">0.25L — Tonic Water ili Bitter Lemon</div></div>
+        <div class="menu-item-price">260 rsd</div>
       </div>
     </div>
 
@@ -792,34 +1429,81 @@
 
 <!-- ════ PHOTO ROW ════ -->
 <div class="photo-row">
-  <div class="pr">
-    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=85&auto=format&fit=crop" alt="Enterijer restorana" loading="lazy">
-    <div class="pr-cap"><span>Naš prostor</span></div>
-  </div>
-  <div class="pr">
-    <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=700&q=85&auto=format&fit=crop" alt="Gosti za stolom" loading="lazy">
-    <div class="pr-cap"><span>Naši gosti</span></div>
-  </div>
+  <div class="pr"><img src="2r.jpg" alt="Dany's Gastro" loading="lazy"></div>
+  <div class="pr"><img src="3r.jpg" alt="Dany's Gastro" loading="lazy"></div>
+  <div class="pr"><img src="4r.jpg" alt="Dany's Gastro" loading="lazy"></div>
+  <div class="pr"><img src="5r.jpg" alt="Dany's Gastro" loading="lazy"></div>
+  <div class="pr"><img src="6r.jpg" alt="Dany's Gastro" loading="lazy"></div>
+  <div class="pr"><img src="7r.jpg" alt="Dany's Gastro" loading="lazy"></div>
 </div>
 
 <!-- ════ VIBE / STATS ════ -->
 <section class="section vibe-section">
-  <div class="section-tag">Više od hrane</div>
-  <h2>Gde gosti postaju <em>porodica.</em></h2>
-  <p>Dany's Gastro je zamišljen kao produžetak vaše dnevne sobe. Razgovor teče, muzika šapuće, a hrana govori glasno. Dođi sam, dođi u društvu — svaki put je pravo.</p>
+  <div class="section-tag" data-en="More than food">Više od hrane</div>
+  <h2><span data-en="Where guests become">Gde gosti postaju</span> <em><span data-en="family.">porodica.</span></em></h2>
+  <p data-en="Dany's Gastro is conceived as an extension of your living room. Conversation flows, music whispers, and food speaks loud. Come alone, come with company — every time is the right time.">Dany's Gastro je zamišljen kao produžetak vaše dnevne sobe. Razgovor teče, muzika šapuće, a hrana govori glasno. Dođi sam, dođi u društvu — svaki put je pravo.</p>
   <div class="stats-row">
-    <div class="stat-box"><div class="stat-num">10+</div><div class="stat-label">Jela u meniju</div></div>
-    <div class="stat-box"><div class="stat-num">100%</div><div class="stat-label">Svježi sastojci</div></div>
-    <div class="stat-box"><div class="stat-num">7</div><div class="stat-label">Dana u sedmici</div></div>
-    <div class="stat-box"><div class="stat-num">∞</div><div class="stat-label">Razloga da dođeš</div></div>
+    <div class="stat-box"><div class="stat-num">80+</div><div class="stat-label" data-en="Dishes on menu">Jela u meniju</div></div>
+    <div class="stat-box"><div class="stat-num">100%</div><div class="stat-label" data-en="Fresh ingredients">Sveži sastojci</div></div>
+    <div class="stat-box"><div class="stat-num">7</div><div class="stat-label" data-en="Days a week">Dana u nedelji</div></div>
+    <div class="stat-box"><div class="stat-num">10—24</div><div class="stat-label" data-en="Working hours">Radno vreme</div></div>
+  </div>
+
+  <div class="s-grid">
+    <div class="si"><img src="1s.jpg" alt="Dany's Gastro" loading="lazy"></div>
+    <div class="si"><img src="2s.jpg" alt="Dany's Gastro" loading="lazy"></div>
+    <div class="si"><img src="3s.jpg" alt="Dany's Gastro" loading="lazy"></div>
+    <div class="si"><img src="4s.jpg" alt="Dany's Gastro" loading="lazy"></div>
+    <div class="si"><img src="5s.jpg" alt="Dany's Gastro" loading="lazy"></div>
+    <div class="si"><img src="6s.jpg" alt="Dany's Gastro" loading="lazy"></div>
+    <div class="si"><img src="7s.jpg" alt="Dany's Gastro" loading="lazy"></div>
+    <div class="si"><img src="8s%20vine.jpg" alt="Dany's Gastro" loading="lazy"></div>
+  </div>
+</section>
+
+<!-- ════ LOCATION ════ -->
+<section class="section location-section" id="lokacija">
+  <div class="section-tag" data-en="Location">Lokacija</div>
+  <h2><span data-en="Visit us in">Posetite nas u</span> <em><span data-en="Kruševac.">Kruševcu.</span></em></h2>
+  <p data-en="We're located in the heart of Kruševac — come in, take a seat, and let the story tell itself.">Nalazimo se u srcu Kruševca — dođite, sedite za sto, i pustite da se priča sama ispriča.</p>
+
+  <div class="location-grid">
+    <div class="map-wrap">
+      <iframe
+        src="https://maps.google.com/maps?q=Hajduk+Veljkova+4,+37000+Kru%C5%A1evac,+Srbija&t=&z=17&ie=UTF8&iwloc=&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Dany's Gastro — Hajduk Veljkova 4, Kruševac"
+        allowfullscreen></iframe>
+    </div>
+    <div class="location-info">
+      <div>
+        <div class="info-title" data-en="— Address">— Adresa</div>
+        <div class="info-content">Hajduk Veljkova 4<br><span data-en="37000 Kruševac, Serbia">37000 Kruševac, Srbija</span></div>
+        <div class="info-sub" data-en="City center">Centar grada</div>
+      </div>
+      <div>
+        <div class="info-title" data-en="— Working Hours">— Radno vreme</div>
+        <div class="hours-list">
+          <div class="hour-row"><span class="hour-day" data-en="Mon — Thu">Pon — Čet</span><span class="hour-time">10:00 — 24:00</span></div>
+          <div class="hour-row"><span class="hour-day" data-en="Fri — Sat">Pet — Sub</span><span class="hour-time">10:00 — 01:00</span></div>
+          <div class="hour-row"><span class="hour-day" data-en="Sunday">Nedelja</span><span class="hour-time">12:00 — 24:00</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="info-title" data-en="— Phone">— Telefon</div>
+        <div class="info-content"><a href="tel:+381644185494">+381 64 418 5494</a></div>
+        <div class="info-sub" data-en="Reservations & delivery">Rezervacije i dostava</div>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- ════ CONTACT ════ -->
 <section class="section contact-section" id="kontakt">
-  <div class="section-tag">Kontakt</div>
-  <h2>Nađimo se za <em>stolom.</em></h2>
-  <p>Rezerviši mjesto, naruči online ili nam jednostavno pošalji poruku — mi smo tu.</p>
+  <div class="section-tag" data-en="Contact">Kontakt</div>
+  <h2><span data-en="Let's meet at the">Nađimo se za</span> <em><span data-en="table.">stolom.</span></em></h2>
+  <p data-en="Reserve a table, order online, or just send us a message — we're here for you.">Rezerviši mesto, naruči online ili nam jednostavno pošalji poruku — tu smo za tebe.</p>
 
   <div class="contact-info">
     <div class="contact-row">
@@ -828,27 +1512,28 @@
     </div>
     <div class="contact-row">
       <div class="contact-icon">🚚</div>
-      <span><a href="http://alideda.com" target="_blank">alideda.com</a> — dostava</span>
+      <span><a href="http://alideda.com" target="_blank">alideda.com</a> <span data-en="— delivery">— dostava</span></span>
     </div>
     <div class="contact-row">
       <div class="contact-icon">📍</div>
-      <span>Beograd, Srbija</span>
+      <span>Hajduk Veljkova 4, 37000 Kruševac</span>
     </div>
   </div>
 
-  <a href="order.html" class="btn-order-gold">Naruči Online →</a>
+  <a href="order.html" class="btn-order-gold" data-en="Order Online →">Naruči Online →</a>
 </section>
 
 <!-- ════ FOOTER ════ -->
 <footer>
   <div class="footer-logo">Dany's <em>Gastro</em></div>
   <ul class="footer-links">
-    <li><a href="#meni">Meni</a></li>
-    <li><a href="#kontakt">Kontakt</a></li>
-    <li><a href="order.html">Naruči</a></li>
-    <li><a href="http://alideda.com" target="_blank">Alideda dostava</a></li>
+    <li><a href="#meni" data-en="Menu">Meni</a></li>
+    <li><a href="#lokacija" data-en="Location">Lokacija</a></li>
+    <li><a href="#kontakt" data-en="Contact">Kontakt</a></li>
+    <li><a href="order.html" data-en="Order">Naruči</a></li>
+    <li><a href="http://alideda.com" target="_blank" data-en="Alideda delivery">Alideda dostava</a></li>
   </ul>
-  <div class="footer-copy">© 2024 Dany's Gastro. Sva prava zadržana.</div>
+  <div class="footer-copy" data-en="© 2024 Dany's Gastro. All rights reserved.">© 2024 Dany's Gastro. Sva prava zadržana.</div>
 </footer>
 
 <!-- ════ SPINNING WIDGET ════ -->
@@ -883,7 +1568,7 @@
     <text x="21" y="25" font-family="Georgia,serif" font-size="5.5" font-style="italic"
           fill="rgba(242,237,230,.65)" text-anchor="middle" dominant-baseline="middle">G</text>
   </svg>
-  <div id="db-label">Naruči</div>
+  <div id="db-label" data-en="Order">Naruči</div>
 </a>
 
 <script>
@@ -914,6 +1599,194 @@
 
 <!-- NOTE: Supabase code removed from index.html — it was dead code (submitOrderToKitchen
      was never called from this page). All ordering happens in order.html. -->
+
+<!-- ════ LANGUAGE TOGGLE — SR ↔ EN ════ -->
+<script>
+(function(){
+  // Menu dictionary: Serbian → English. Used for category titles and item descriptions.
+  // Dish names (Margherita, Carbonara, Sarma, etc.) stay as proper culinary names.
+  const T = {
+    // Category titles
+    "👨‍🍳 Specijaliteti Šefa": "👨‍🍳 Chef's Specials",
+    "🍕 Pizze": "🍕 Pizzas",
+    "🍝 Testenine": "🍝 Pasta",
+    "🥗 Salate": "🥗 Salads",
+    "🥪 Sendviči": "🥪 Sandwiches",
+    "🍰 Slatkiši": "🍰 Desserts",
+    "🍷 Vina": "🍷 Wines",
+    "💧 Voda & Sokovi": "💧 Water & Juices",
+
+    // Chef's specials
+    "Tri vrste arancina sa biljnim umakom — predjelo šefa": "Three types of arancini with herb dip — chef's appetizer",
+    "Goveđi biftek, argentinski biljni sos, pečen krompir": "Beef steak, Argentinian herb sauce, roasted potatoes",
+    "Polako pečena jagnjetina u demi-glace redukciji": "Slow-roasted lamb in demi-glace reduction",
+    "Pire od celera, jus od crnog vina, mikro-zelenilo": "Celeriac purée, red wine jus, microgreens",
+    "Pile u sosu od maslina, kapara i paradajza": "Chicken in olive, caper and tomato sauce",
+    "Konfitirana, redukcija crnog vina, karamelizovan luk": "Confit, red wine reduction, caramelized onion",
+    "Pan-seared losos, krem sos sa šampinjonima": "Pan-seared salmon, mushroom cream sauce",
+    "Tanko sečen biftek, rukola, parmigiano, balsamico": "Thinly sliced steak, arugula, parmigiano, balsamic",
+    "Mlada sarma punjena junetinom i pirinčem, kajmak": "Young cabbage rolls with beef and rice, served with kajmak",
+    "Babure punjene junetinom i pirinčem u paradajz sosu": "Bell peppers stuffed with beef and rice in tomato sauce",
+    "10 ćevapa, somun, sitno seckani crveni luk, kajmak": "10 ćevapi, somun bread, finely chopped red onion, kajmak",
+    "Svinjski but sa žara, urnebes salata, lepinja": "Grilled pork rump, urnebes salad, flatbread",
+    "Sušeni svinjski vrat na žaru, mladi kajmak, lepinja": "Cured pork neck grilled, young kajmak, flatbread",
+    "Ćevapi, ražnjići, vešalica i pljeskavica za jednu osobu": "Ćevapi, kebab skewers, vešalica and pljeskavica — for one",
+    "Teleća pečenica punjena kajmakom, panirana, tartar sos": "Veal loin stuffed with kajmak, breaded, tartar sauce",
+    "Polako pečena jagnjetina, krompir, rozmarin, beli luk": "Slow-roasted lamb, potatoes, rosemary, garlic",
+
+    // Pizze
+    "Paradajz sos, sveža mocarela, bosiljak, maslinovo ulje": "Tomato sauce, fresh mozzarella, basil, olive oil",
+    "Paradajz sos, mocarela, bosiljak, maslinovo ulje": "Tomato sauce, mozzarella, basil, olive oil",
+    "Paradajz sos, mocarela, šunka, pečurke, masline": "Tomato sauce, mozzarella, ham, mushrooms, olives",
+    "Ljuti paradajz sos, pikantna salama, chilli": "Spicy tomato sauce, pepperoni, chili",
+    "Tuna, crveni luk, masline, mocarela, paradajz": "Tuna, red onion, olives, mozzarella, tomato",
+    "Šunka, pečurke, artičoke, masline — četiri sezone": "Ham, mushrooms, artichokes, olives — four seasons",
+    "Mocarela, gorgonzola, parmigiano, kozji sir": "Mozzarella, gorgonzola, parmigiano, goat cheese",
+    "Punjena šunka, pečurke, mocarela, ricotta": "Filled with ham, mushrooms, mozzarella, ricotta",
+    "Tikvice, plavi patlidžan, paprika, cherry paradajz": "Zucchini, eggplant, pepper, cherry tomato",
+    "Prosciutto crudo, rukola, parmigiano, mocarela": "Prosciutto crudo, arugula, parmigiano, mozzarella",
+    "Cherry paradajz, burrata, bosiljak, maslinovo ulje": "Cherry tomato, burrata, basil, olive oil",
+    "Krem od tartufa, šampinjoni, parmigiano, mocarela": "Truffle cream, mushrooms, parmigiano, mozzarella",
+    "Plodovi mora, paradajz sos, beli luk, peršun": "Seafood, tomato sauce, garlic, parsley",
+
+    // Testenine
+    "Spaghetti, panceta, žumance, pecorino romano": "Spaghetti, pancetta, egg yolk, pecorino romano",
+    "Domaći ragu od junetine, paradajz, parmigiano": "Homemade beef ragù, tomato, parmigiano",
+    "Ljuti paradajz sos, beli luk, chilli, peršun": "Spicy tomato sauce, garlic, chili, parsley",
+    "Krem sos, parmigiano, sveži peršun": "Cream sauce, parmigiano, fresh parsley",
+    "Domaći pesto, pinjoli, parmigiano, bosiljak": "Homemade pesto, pine nuts, parmigiano, basil",
+    "Tagliatelle, šampinjoni, krem, tartuf ulje": "Tagliatelle, mushrooms, cream, truffle oil",
+    "Domaća lazanja, ragu, bešamel, parmigiano": "Homemade lasagna, ragù, béchamel, parmigiano",
+    "Punjeni ricottom i spanaćem, puter sa salvijom": "Filled with ricotta and spinach, sage butter",
+    "Domaći njoki, sir gorgonzola, mleveni orasi": "Homemade gnocchi, gorgonzola, ground walnuts",
+    "Plodovi mora, beli luk, belo vino, peršun": "Seafood, garlic, white wine, parsley",
+    "Maslinovo ulje, beli luk, čili papričica, peršun": "Olive oil, garlic, chili pepper, parsley",
+    "Tonarelli, pecorino romano, crni biber, maslac": "Tonarelli, pecorino romano, black pepper, butter",
+    "Krem od limuna, parmigiano, korica limuna, bosiljak": "Lemon cream, parmigiano, lemon zest, basil",
+    "Paradajz sos, masline, kapari, inćuni, čili": "Tomato sauce, olives, capers, anchovies, chili",
+    "Bucatini, guanciale, paradajz, pecorino, čili": "Bucatini, guanciale, tomato, pecorino, chili",
+    "Plavi patlidžan, paradajz, ricotta salata, bosiljak": "Eggplant, tomato, ricotta salata, basil",
+    "Široka pasta, ragu od divlje svinje, parmigiano": "Wide pasta, wild boar ragù, parmigiano",
+
+    // Salate
+    "Romaine, grilovana piletina, krutoni, parmigiano": "Romaine, grilled chicken, croutons, parmigiano",
+    "Premium tuna, masline, kapari, cherry paradajz": "Premium tuna, olives, capers, cherry tomato",
+    "Paradajz, krastavac, paprika, crveni luk, sirenje": "Tomato, cucumber, pepper, red onion, white cheese",
+    "Mocarela di bufala, paradajz, bosiljak, maslinovo ulje": "Buffalo mozzarella, tomato, basil, olive oil",
+    "Feta, masline, krastavac, paradajz, origano": "Feta, olives, cucumber, tomato, oregano",
+    "Tuna, kuvano jaje, krompir, boranija, masline": "Tuna, boiled egg, potato, green beans, olives",
+    "Rukola, prosciutto crudo, parmigiano, sveža kruška": "Arugula, prosciutto crudo, parmigiano, fresh pear",
+    "Dimljeni losos, mix lista, avokado, dressing od citrusa": "Smoked salmon, mixed greens, avocado, citrus dressing",
+    "Piletina, slanina, jaje, avokado, plavi sir": "Chicken, bacon, egg, avocado, blue cheese",
+    "Quinoa, avokado, slatki krompir, edamame, citrus": "Quinoa, avocado, sweet potato, edamame, citrus",
+    "Mladi krastavac, domaća pavlaka, beli luk, kopar": "Young cucumber, homemade sour cream, garlic, dill",
+    "Kuvani krompir, crveni luk, peršun, maslinovo ulje": "Boiled potato, red onion, parsley, olive oil",
+    "Šargarepa, beli kupus, jabuka, limun, med": "Carrot, white cabbage, apple, lemon, honey",
+    "Domaća pečena paprika, beli luk, peršun, ulje": "Homemade roasted pepper, garlic, parsley, oil",
+    "Pečena cvekla, orasi, kozji sir, listići rukole": "Roasted beet, walnuts, goat cheese, arugula",
+    "Cherry paradajz, masline, feta, krastavac, origano": "Cherry tomato, olives, feta, cucumber, oregano",
+    "Jabuka, celer, orasi, grožđe, dresing sa majonezom": "Apple, celery, walnuts, grapes, mayo dressing",
+
+    // Sendviči
+    "Pileći file, zelena salata, paradajz, majonez": "Chicken fillet, lettuce, tomato, mayo",
+    "Šunka, sir, karamelizovani luk, topli": "Ham, cheese, caramelized onion, served warm",
+    "Tostirani hleb, piletina, slanina, jaje, paradajz": "Toasted bread, chicken, bacon, egg, tomato",
+    "Junetina, karamelizovani luk, rukola, gorgonzola": "Beef, caramelized onion, arugula, gorgonzola",
+    "Tuna, topljen sir, paradajz, na tostiranom hlebu": "Tuna, melted cheese, tomato, on toasted bread",
+    "Mocarela, paradajz, bosiljak, maslinovo ulje": "Mozzarella, tomato, basil, olive oil",
+    "Prosciutto crudo, mocarela, rukola, paradajz": "Prosciutto crudo, mozzarella, arugula, tomato",
+    "Sporo pečena svinjetina, BBQ sos, coleslaw": "Slow-cooked pork, BBQ sauce, coleslaw",
+    "Grilovano povrće, humus, avokado, klice": "Grilled vegetables, hummus, avocado, sprouts",
+    "Junetina, paprika, luk, topljen sir": "Beef, pepper, onion, melted cheese",
+
+    // Slatkiši
+    "Tradicionalna krempita sa vanilom — domaća": "Traditional vanilla custard slice — homemade",
+    "Asortiman ručno pravljenih kolačića": "Assortment of handmade cookies",
+    "Domaći biskvit rolat sa šumskim voćem": "Homemade sponge roll with forest fruits",
+    "Mascarpone, espresso, savojarde, kakao prah": "Mascarpone, espresso, ladyfingers, cocoa powder",
+    "Italijanski vanila krem, sos od šumskog voća": "Italian vanilla cream, forest fruit sauce",
+    "Vanila sladoled preliven vrućim espressom": "Vanilla ice cream topped with hot espresso",
+    "Punjeni vanilom, prelivenim topljenom čokoladom": "Filled with vanilla, drizzled with melted chocolate",
+    "Klasični NY stil, sos od jagode ili šumskog voća": "Classic NY style, strawberry or forest fruit sauce",
+    "Pečene jabuke, krckavi preliv, kuglica sladoleda": "Baked apples, crumble topping, scoop of ice cream",
+    "Topli čokoladni brownie, sladoled, orasi": "Warm chocolate brownie, ice cream, walnuts",
+    "Vanila krem, karamelizovani sloj šećera": "Vanilla cream, caramelized sugar layer",
+    "Topli lava kolač, topljena čokolada u sredini": "Warm lava cake, melted chocolate center",
+    "Sveže sezonsko voće, med, listići mente": "Fresh seasonal fruit, honey, mint leaves",
+    "Pistać, malina, čokolada — francuski klasik": "Pistachio, raspberry, chocolate — French classic",
+    "Banana, tri kuglice sladoleda, čokolada, šlag": "Banana, three scoops of ice cream, chocolate, whipped cream",
+
+    // Vina
+    "Crveno suvo · Severna Makedonija · čaša 380 rsd": "Red dry · North Macedonia · glass 380 rsd",
+    "Crveno suvo · Plantaže (CG) · čaša 450 rsd": "Red dry · Plantaže (MNE) · glass 450 rsd",
+    "Crveno suvo · Šumadija (SRB) · čaša 480 rsd": "Red dry · Šumadija (SRB) · glass 480 rsd",
+    "Crveno suvo · Oplenac (SRB) · čaša 520 rsd": "Red dry · Oplenac (SRB) · glass 520 rsd",
+    "Crveno suvo · Negotin (SRB) · čaša 580 rsd": "Red dry · Negotin (SRB) · glass 580 rsd",
+    "Crveno suvo · Toskana (IT) · čaša 620 rsd": "Red dry · Tuscany (IT) · glass 620 rsd",
+    "Crveno suvo · Veneto (IT) · čaša 980 rsd": "Red dry · Veneto (IT) · glass 980 rsd",
+    "Belo suvo · Mostar (BiH) · čaša 380 rsd": "White dry · Mostar (BIH) · glass 380 rsd",
+    "Belo suvo · Slavonija (HR) · čaša 420 rsd": "White dry · Slavonia (HR) · glass 420 rsd",
+    "Belo suvo · Veneto (IT) · čaša 440 rsd": "White dry · Veneto (IT) · glass 440 rsd",
+    "Belo suvo · Oplenac (SRB) · čaša 480 rsd": "White dry · Oplenac (SRB) · glass 480 rsd",
+    "Belo suvo · Marlborough (NZ) · čaša 560 rsd": "White dry · Marlborough (NZ) · glass 560 rsd",
+    "Belo suvo · Sauvignon Blanc (FR) · čaša 680 rsd": "White dry · Sauvignon Blanc (FR) · glass 680 rsd",
+    "Roze suvo · Provansa (FR) · čaša 520 rsd": "Rosé dry · Provence (FR) · glass 520 rsd",
+    "Penušavo suvo · Veneto (IT) · čaša 480 rsd": "Sparkling dry · Veneto (IT) · glass 480 rsd",
+    "Šampanjac brut · Champagne (FR) · čaša 1280 rsd": "Brut champagne · Champagne (FR) · glass 1280 rsd",
+
+    // Voda & Sokovi
+    "Negazirana izvorska voda": "Still spring water",
+    "Negazirana / gazirana — po izboru": "Still / sparkling — your choice",
+    "Mineralna gazirana voda": "Sparkling mineral water",
+    "Italijanska mineralna voda": "Italian mineral water",
+    "100% sveže ceđen sok od pomorandže": "100% freshly squeezed orange juice",
+    "Sveže ceđen sok od jabuke i đumbira": "Freshly squeezed apple-ginger juice",
+    "Sveže ceđen sok od šargarepe i jabuke": "Freshly squeezed carrot-apple juice",
+    "Sveži limun, voda, šećer u sirupu": "Fresh lemon, water, sugar syrup",
+    "Sveži limun, listići mente, gazirana voda": "Fresh lemon, mint leaves, sparkling water",
+    "Breskva ili limun — po izboru": "Peach or lemon — your choice",
+    "Jagoda, banana, jogurt, med": "Strawberry, banana, yogurt, honey",
+    "Malina, banana, mleko, med": "Raspberry, banana, milk, honey",
+    "Banana, mleko, kakao, med": "Banana, milk, cocoa, honey",
+    "Pomorandža · jabuka · jagoda · multivitamin": "Orange · apple · strawberry · multivitamin",
+    "0.25L — flaša": "0.25L — bottle",
+    "0.25L — Tonic Water ili Bitter Lemon": "0.25L — Tonic Water or Bitter Lemon"
+  };
+
+  function applyLang(lang) {
+    const isEN = lang === 'en';
+
+    // Elements with data-en attribute (UI chrome)
+    document.querySelectorAll('[data-en]').forEach(el => {
+      if (!el.dataset.sr) el.dataset.sr = el.textContent;
+      el.textContent = isEN ? el.dataset.en : el.dataset.sr;
+    });
+
+    // Menu category titles + item descriptions via dictionary
+    document.querySelectorAll('.menu-cat-title, .menu-item-desc').forEach(el => {
+      if (el.hasAttribute('data-en')) return;
+      if (!el.dataset.sr) el.dataset.sr = el.textContent.trim();
+      const orig = el.dataset.sr;
+      const trans = T[orig];
+      el.textContent = (isEN && trans) ? trans : orig;
+    });
+
+    document.documentElement.lang = isEN ? 'en' : 'sr';
+    const btn = document.getElementById('lang-toggle');
+    if (btn) btn.textContent = isEN ? 'SR' : 'EN';
+  }
+
+  const saved = localStorage.getItem('dg-lang') || 'sr';
+  applyLang(saved);
+
+  const btn = document.getElementById('lang-toggle');
+  if (btn) btn.addEventListener('click', () => {
+    const next = document.documentElement.lang === 'en' ? 'sr' : 'en';
+    localStorage.setItem('dg-lang', next);
+    applyLang(next);
+  });
+})();
+</script>
 
 </body>
 </html>
